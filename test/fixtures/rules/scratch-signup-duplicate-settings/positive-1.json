@@ -1,0 +1,6 @@
+{
+  "name": "SignupDuplicateSettingsSpecified",
+  "message": "SignupDuplicateSettingsSpecified: Duplicate settings specified in definition file.",
+  "exitCode": 1,
+  "status": 1
+}

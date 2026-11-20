@@ -1,0 +1,26 @@
+id: auth-jwt-invalid-grant
+title: JWT authentication failed with INVALID_GRANT
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      contains: "user hasn't approved this consumer"
+    - field: message
+      contains: 'INVALID_GRANT'
+    - field: message
+      regex: "(?i)invalid_grant:\\s*(expired authorization code|user hasn't approved)"
+explain: >
+  The JWT Bearer token flow was rejected by Salesforce. This occurs when the Connected App
+  does not have "Admin approved users are pre-authorized" enabled, the user profile or permission
+  set is not assigned to the Connected App, or the username does not match the certificate subject.
+fix:
+  - In Salesforce Setup, navigate to App Manager and edit your Connected App OAuth policies.
+  - Under "OAuth Policies", change "Permitted Users" to "Admin approved users are pre-authorized".
+  - In the Connected App detail page, add the Profile or Permission Set of the authenticating user.
+  - Verify that the username passed to the CLI matches the digital certificate uploaded to the Connected App.
+sources:
+  - url: https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_jwt_flow.htm&type=5
+    title: OAuth 2.0 JWT Bearer Flow for Server-to-Server Integration
+tags: [auth, jwt]

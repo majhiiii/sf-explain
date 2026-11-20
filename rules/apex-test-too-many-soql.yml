@@ -1,0 +1,23 @@
+id: apex-test-too-many-soql
+title: Apex governor limit exceeded - Too many SOQL queries
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      contains: 'System.LimitException: Too many SOQL queries: 101'
+    - field: message
+      regex: '(?i)LimitException:\s*Too many SOQL queries'
+explain: >
+  The execution exceeded the synchronous Apex governor limit of 100 SOQL queries.
+  This commonly happens when a SOQL query is executed inside a "for" or "while" loop,
+  or when trigger handlers execute iteratively without collection bulkification.
+fix:
+  - Review the stack trace line to find the query within the iterative code path.
+  - Move the SOQL query outside loops and retrieve records in bulk into Maps or Lists.
+  - In unit tests, wrap the method under test with Test.startTest() and Test.stopTest() to provide a fresh set of governor limits for the execution under test.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm
+    title: Execution Governors and Limits
+tags: [apex, test, limits]

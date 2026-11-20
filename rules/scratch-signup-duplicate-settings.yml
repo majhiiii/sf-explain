@@ -1,0 +1,22 @@
+id: scratch-signup-duplicate-settings
+title: Duplicate settings specified in scratch org definition
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      contains: 'SignupDuplicateSettingsSpecified'
+    - field: message
+      contains: 'Duplicate settings specified in definition file'
+explain: >
+  The scratch org definition file (project-scratch-def.json) specifies both a feature and a setting
+  that configure the same underlying capability, or defines the same setting key more than once.
+fix:
+  - Open your project-scratch-def.json file.
+  - Check for duplicate keys in the "settings" section.
+  - Ensure you are not configuring both a "features" entry and a "settings" entry for the same platform capability (for example, configuring Communities in features and communitiesSettings in settings).
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_def_file.htm
+    title: Scratch Org Definition Configuration Values
+tags: [scratch-org, definition]

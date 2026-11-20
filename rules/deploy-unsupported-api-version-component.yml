@@ -1,0 +1,22 @@
+id: deploy-unsupported-api-version-component
+title: Metadata component not supported for project API version
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      contains: 'not available for deploy for this API version'
+    - field: message
+      regex: '(?i)is not available for (deploy|retrieve) for this API version'
+explain: >
+  The metadata component or configuration being deployed requires a higher Salesforce API version
+  than the sourceApiVersion configured in your sfdx-project.json.
+fix:
+  - Open sfdx-project.json in your project root.
+  - Update the "sourceApiVersion" attribute to match or exceed the API version where this metadata was introduced (for example, "60.0" or "61.0").
+  - Verify that the target Salesforce org release supports the chosen API version.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm
+    title: Salesforce DX Project Configuration File (sfdx-project.json)
+tags: [deploy, api-version]

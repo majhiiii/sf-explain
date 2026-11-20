@@ -1,0 +1,20 @@
+{
+  "status": 1,
+  "result": {
+    "summary": {
+      "outcome": "Failed",
+      "testsRan": 1
+    },
+    "tests": [
+      {
+        "Outcome": "Fail",
+        "ApexClass": {
+          "Name": "UserProvisioningTest"
+        },
+        "MethodName": "testCreateUserWithAccount",
+        "Message": "System.DmlException: Insert failed. First exception on row 0; first error: MIXED_DML_OPERATION, DML operation on setup object is not permitted after you have updated a non-setup object (or vice versa): User, original object: Account: []",
+        "StackTrace": "Class.UserProvisioningTest.testCreateUserWithAccount: line 35, column 1"
+      }
+    ]
+  }
+}

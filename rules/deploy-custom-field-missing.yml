@@ -1,0 +1,22 @@
+id: deploy-custom-field-missing
+title: Referenced custom field does not exist in target org
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)In field:\s*field\s*-\s*no CustomField named'
+    - field: message
+      regex: '(?i)no CustomField named\s+.*?\s+found'
+explain: >
+  A deployed component (such as a Page Layout, Profile, Permission Set, or FlexiPage) references
+  a custom field that does not exist in the target org and is not included in the deployment payload.
+fix:
+  - Verify that the custom field definition file (*.field-meta.xml) is included in your source directory.
+  - If the field is in another directory or package, deploy the custom field to the target org before deploying dependent layouts or permissions.
+  - If the custom field belongs to an installed managed package, ensure the package is installed in the target org and the field API name includes the namespace prefix.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_customfield.htm
+    title: Salesforce Metadata API - CustomField
+tags: [deploy, metadata]

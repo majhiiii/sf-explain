@@ -1,0 +1,20 @@
+{
+  "status": 1,
+  "result": {
+    "summary": {
+      "outcome": "Failed",
+      "testsRan": 1
+    },
+    "tests": [
+      {
+        "Outcome": "Fail",
+        "ApexClass": {
+          "Name": "OrderServiceTest"
+        },
+        "MethodName": "testBulkOrders",
+        "Message": "System.AssertException: Assertion Failed: Expected 5 but was 0",
+        "StackTrace": "Class.OrderServiceTest.testBulkOrders: line 20, column 1"
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "status": 1,
+  "result": {
+    "details": {
+      "componentFailures": [
+        {
+          "componentType": "ApexClass",
+          "fileName": "force-app/main/default/classes/AccountService.cls",
+          "fullName": "AccountService",
+          "problem": "Expecting '}' but was: ']'",
+          "problemType": "Error",
+          "success": false
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,22 @@
+id: apex-test-mixed-dml
+title: Mixed DML operation - Setup and non-setup objects in same transaction
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      contains: 'MIXED_DML_OPERATION'
+    - field: message
+      regex: '(?i)DML operation on setup object is not permitted after you have updated a non-setup object'
+explain: >
+  Apex prohibits performing DML operations on setup objects (such as User, UserRole, Group,
+  or PermissionSet) and non-setup objects (such as Account, Contact, or custom objects)
+  within the same transaction.
+fix:
+  - In unit tests, isolate setup object DML operations by executing them inside a System.runAs() block.
+  - In production code, separate setup and non-setup DML across asynchronous transaction boundaries using an @future method or Queueable Apex class.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_dml_non_mix_sobjects.htm
+    title: sObjects That Cannot Be Used Together in DML Operations
+tags: [apex, test, dml]

@@ -1,0 +1,20 @@
+{
+  "status": 1,
+  "result": {
+    "summary": {
+      "outcome": "Failed",
+      "testsRan": 1
+    },
+    "tests": [
+      {
+        "Outcome": "Fail",
+        "ApexClass": {
+          "Name": "UserProvisioningTest"
+        },
+        "MethodName": "testCreateUserWithAccount",
+        "Message": "System.NullPointerException: Attempt to de-reference a null object",
+        "StackTrace": "Class.UserProvisioningTest.testCreateUserWithAccount: line 15, column 1"
+      }
+    ]
+  }
+}

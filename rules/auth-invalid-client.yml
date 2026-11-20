@@ -1,0 +1,23 @@
+id: auth-invalid-client
+title: Connected App client identifier invalid
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      contains: 'invalid_client_id: client identifier invalid'
+    - field: message
+      contains: 'invalid_client'
+explain: >
+  Salesforce could not find a Connected App matching the provided Client ID (Consumer Key).
+  This happens if the consumer key was typed incorrectly, or if the Connected App was created
+  recently and has not yet replicated across all Salesforce identity instances (typically 2 to 10 minutes).
+fix:
+  - In Salesforce Setup, go to App Manager, locate your Connected App, and click "View" to verify the Consumer Key.
+  - If the Connected App was created within the last 10 minutes, wait a few minutes for global OAuth replication to complete and retry.
+  - Ensure you are targeting the correct login URL (e.g. login.salesforce.com vs test.salesforce.com).
+sources:
+  - url: https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_endpoints.htm&type=5
+    title: OAuth 2.0 Authorization Endpoints
+tags: [auth, oauth]

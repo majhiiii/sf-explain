@@ -1,0 +1,25 @@
+id: scratch-active-limit-exceeded
+title: Active scratch org allocation limit exceeded
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: name
+      equals: ActiveScratchOrgLimitExceeded
+    - field: message
+      contains: 'The maximum number of active scratch orgs has been reached'
+    - field: message
+      contains: 'ActiveScratchOrgLimitExceeded'
+explain: >
+  Your Dev Hub org has reached its maximum quota of concurrent active scratch orgs.
+  Active scratch org limits depend on your Dev Hub edition (for example, 3 for Developer Edition
+  and 40 for Enterprise Edition).
+fix:
+  - List your current scratch orgs by running "sf org list --clean".
+  - Delete active scratch orgs you no longer need by running "sf org delete scratch --target-org <username-or-alias> --no-prompt".
+  - Wait for expired scratch orgs to be automatically cleaned up by Salesforce, or request a limit increase from your Salesforce account executive.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_def_limits.htm
+    title: Scratch Org Allocation Limits
+tags: [scratch-org, devhub]

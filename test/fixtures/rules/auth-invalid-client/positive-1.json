@@ -1,0 +1,6 @@
+{
+  "name": "invalid_client",
+  "message": "Authentication failed: invalid_client_id: client identifier invalid",
+  "exitCode": 1,
+  "status": 1
+}

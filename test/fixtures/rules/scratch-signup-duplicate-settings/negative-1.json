@@ -1,0 +1,6 @@
+{
+  "name": "NamedOrgNotFoundError",
+  "message": "No authorization information found for DevHub.",
+  "exitCode": 1,
+  "status": 1
+}

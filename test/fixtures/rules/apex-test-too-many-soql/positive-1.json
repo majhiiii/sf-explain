@@ -1,0 +1,20 @@
+{
+  "status": 1,
+  "result": {
+    "summary": {
+      "outcome": "Failed",
+      "testsRan": 1
+    },
+    "tests": [
+      {
+        "Outcome": "Fail",
+        "ApexClass": {
+          "Name": "OrderServiceTest"
+        },
+        "MethodName": "testBulkOrders",
+        "Message": "System.LimitException: Too many SOQL queries: 101",
+        "StackTrace": "Class.OrderService.calculateTotals: line 42, column 1"
+      }
+    ]
+  }
+}

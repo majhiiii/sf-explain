@@ -1,0 +1,6 @@
+{
+  "name": "ActiveScratchOrgLimitExceeded",
+  "message": "The maximum number of active scratch orgs has been reached for this Dev Hub org.",
+  "exitCode": 1,
+  "status": 1
+}

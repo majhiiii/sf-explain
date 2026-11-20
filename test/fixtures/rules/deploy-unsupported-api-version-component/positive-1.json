@@ -1,0 +1,17 @@
+{
+  "status": 1,
+  "result": {
+    "details": {
+      "componentFailures": [
+        {
+          "componentType": "BriefcaseDefinition",
+          "fileName": "force-app/main/default/briefcases/MyBriefcase.briefcase-meta.xml",
+          "fullName": "MyBriefcase",
+          "problem": "BriefcaseDefinition is not available for deploy for this API version",
+          "problemType": "Error",
+          "success": false
+        }
+      ]
+    }
+  }
+}

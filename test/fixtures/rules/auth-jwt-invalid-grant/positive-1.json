@@ -1,0 +1,6 @@
+{
+  "name": "INVALID_GRANT",
+  "message": "We encountered an error when attempting to authenticate: user hasn't approved this consumer.",
+  "exitCode": 1,
+  "status": 1
+}

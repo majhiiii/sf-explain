@@ -1,0 +1,6 @@
+{
+  "name": "INVALID_SESSION_ID",
+  "message": "Session expired or invalid.",
+  "exitCode": 1,
+  "status": 1
+}
