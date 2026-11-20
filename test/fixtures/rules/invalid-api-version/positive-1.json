@@ -1,0 +1,6 @@
+{
+  "status": 1,
+  "name": "ApiVersionError",
+  "message": "The requested API version is not supported by this Salesforce instance",
+  "exitCode": 1
+}

@@ -1,0 +1,18 @@
+id: dependent-class-invalid
+title: Dependent class is invalid and requires recompilation
+status: verified
+severity: error
+confidence: high
+match:
+  all:
+    - field: message
+      contains: 'Dependent class is invalid and needs recompilation'
+explain: >
+  An Apex class or trigger depends on an external class, interface, or custom field that was modified, making the dependent bytecode invalid.
+fix:
+  - Recompile all Apex classes in the target org via the Developer Console (Setup > Apex Classes > Compile all classes).
+  - Include both the dependent class and its dependency in the same deployment payload.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_compiling.htm
+    title: Compiling Apex Classes
+tags: [apex, deploy]

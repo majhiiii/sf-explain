@@ -1,0 +1,23 @@
+id: not-a-sfdx-project
+title: Command executed outside a Salesforce DX project
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: name
+      equals: InvalidProjectWorkspaceError
+    - field: code
+      equals: InvalidProjectWorkspaceError
+    - field: message
+      contains: 'does not contain a valid Salesforce DX project'
+explain: >
+  The command was run in a directory that is not recognized as a Salesforce DX project.
+  Salesforce project commands require an "sfdx-project.json" file in the current working directory or a parent folder.
+fix:
+  - Change directory to the root of your Salesforce DX repository where sfdx-project.json is located.
+  - If starting a new project, run "sf project generate --name <project-name>" to create the project structure.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_create_new.htm
+    title: Create a Salesforce DX Project
+tags: [project, workspace]

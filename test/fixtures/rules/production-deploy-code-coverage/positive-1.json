@@ -1,0 +1,6 @@
+{
+  "status": 1,
+  "name": "DeployError",
+  "message": "Average test coverage across all Apex Classes and Triggers is 62%, at least 75% test coverage is required",
+  "exitCode": 1
+}

@@ -1,0 +1,25 @@
+id: no-target-org-auth
+title: Target org authorization information not found
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: name
+      equals: NamedOrgNotFoundError
+    - field: code
+      equals: NamedOrgNotFoundError
+    - field: message
+      contains: 'No authorization information found for'
+explain: >
+  The target org specified by alias or username has no valid authorization entry locally.
+  This happens when the alias is misspelled, the org was never authenticated in this environment,
+  or local auth files were cleared.
+fix:
+  - Run "sf org login web --alias <alias>" to authorize the org.
+  - Check authorized orgs with "sf org list" to verify the correct alias name.
+  - Set a default target org with "sf config set target-org <alias>".
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_org_commands_unified.htm
+    title: Salesforce CLI Org Commands Reference
+tags: [auth, target-org]

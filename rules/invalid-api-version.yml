@@ -1,0 +1,20 @@
+id: invalid-api-version
+title: Requested API version is unsupported or deprecated
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      contains: 'The requested API version is not supported'
+    - field: message
+      contains: 'Unsupported API version'
+explain: >
+  The API version configured in the project or CLI parameters is retired, invalid, or higher than the target org supports.
+fix:
+  - Open sfdx-project.json and update "sourceApiVersion" to a supported release version.
+  - Check target org release version with "sf org display" and ensure your project API version does not exceed it.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_unified.htm
+    title: Salesforce CLI API Version Configuration
+tags: [config, api-version]

@@ -1,0 +1,23 @@
+id: expired-auth-token
+title: Session or refresh token has expired
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: code
+      equals: INVALID_SESSION_ID
+    - field: message
+      contains: 'expired access/refresh token'
+    - field: message
+      contains: 'Session expired or invalid'
+explain: >
+  The session or OAuth refresh token for the connected Salesforce org has expired or was revoked.
+  Connected apps or org session policies may invalidate tokens after periods of inactivity.
+fix:
+  - Re-authenticate to the org by running "sf org login web --alias <alias>".
+  - If using JWT authentication in CI/CD, verify the connected app certificate is valid and run "sf org login jwt".
+sources:
+  - url: https://help.salesforce.com/s/articleView?id=000385202&type=1
+    title: Salesforce Help - Resolve Expired Token Errors
+tags: [auth, oauth, session]

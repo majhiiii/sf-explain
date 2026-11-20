@@ -1,0 +1,11 @@
+{
+  "status": 1,
+  "name": "RemoteOrgSignupFailed",
+  "message": "The scratch org creation failed: Daily scratch org signup limit reached.",
+  "exitCode": 1,
+  "code": "RemoteOrgSignupFailed",
+  "result": {
+    "message": "The scratch org creation failed: Daily scratch org signup limit reached.",
+    "errorCode": "SIGNUP_LIMIT_EXCEEDED"
+  }
+}

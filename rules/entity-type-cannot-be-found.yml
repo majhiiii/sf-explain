@@ -1,0 +1,18 @@
+id: entity-type-cannot-be-found
+title: Referenced entity or metadata type cannot be found
+status: verified
+severity: error
+confidence: high
+match:
+  all:
+    - field: message
+      regex: "Entity of type '.*' named '.*' cannot be found"
+explain: >
+  A component being deployed references an object, field, or metadata type that does not exist in the target org and is not included in the deployment package.
+fix:
+  - Add the missing metadata dependency to your package directory or deployment manifest (package.xml).
+  - Deploy dependencies to the target org prior to deploying dependent components.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.daas.meta/daas/forcemdundoc.htm
+    title: Salesforce Metadata API Developer Guide
+tags: [deploy, dependencies]

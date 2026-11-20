@@ -1,0 +1,6 @@
+{
+  "status": 1,
+  "name": "DeployError",
+  "message": "Syntax error in file Account.cls at line 4",
+  "exitCode": 1
+}

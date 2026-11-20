@@ -1,0 +1,20 @@
+id: required-field-missing
+title: Required field missing on record insertion
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      contains: 'REQUIRED_FIELD_MISSING'
+    - field: code
+      equals: REQUIRED_FIELD_MISSING
+explain: >
+  A required field value was not provided when creating or updating a record, custom metadata record, or setting.
+fix:
+  - Check the error details for the missing field API name and populate a non-null value.
+  - Review object field settings in Object Manager to ensure default values or required flags are configured accurately.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_calls_concepts_core_data_types.htm
+    title: Core Data Types and Required Fields
+tags: [validation, dml, deploy]

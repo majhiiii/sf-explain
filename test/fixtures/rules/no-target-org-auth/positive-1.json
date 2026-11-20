@@ -1,0 +1,7 @@
+{
+  "name": "NamedOrgNotFoundError",
+  "message": "Parsing --target-org \n\tNo authorization information found for test-scratch-org.\nSee more help with --help",
+  "exitCode": 2,
+  "code": "NamedOrgNotFoundError",
+  "status": 2
+}

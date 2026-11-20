@@ -1,0 +1,20 @@
+id: no-default-target-org
+title: No default target org configured
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      contains: 'No default org set'
+    - field: message
+      contains: 'No default target org found'
+explain: >
+  The CLI command requires a target org connection, but no default target org is configured in project or global settings.
+fix:
+  - 'Set a default target org globally: "sf config set target-org <alias> --global".'
+  - 'Or specify the target org directly with the "--target-org <alias>" command flag.'
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_config_commands_unified.htm
+    title: Salesforce CLI Configuration Commands
+tags: [config, auth, target-org]

@@ -1,0 +1,7 @@
+{
+  "name": "SessionExpiredError",
+  "message": "Unable to refresh session due to: Error authenticating with the refresh token due to: expired access/refresh token",
+  "exitCode": 1,
+  "code": "INVALID_SESSION_ID",
+  "status": 1
+}

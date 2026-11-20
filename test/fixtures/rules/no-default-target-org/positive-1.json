@@ -1,0 +1,6 @@
+{
+  "status": 1,
+  "name": "ConfigError",
+  "message": "No default target org found. Set a default org or pass --target-org",
+  "exitCode": 1
+}

@@ -1,0 +1,6 @@
+{
+  "status": 1,
+  "name": "RemoteOrgSignupFailed",
+  "message": "Scratch org definition file is invalid: missing edition property",
+  "exitCode": 1
+}

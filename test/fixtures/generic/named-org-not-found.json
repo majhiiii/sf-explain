@@ -1,0 +1,13 @@
+{
+  "name": "NamedOrgNotFoundError",
+  "message": "Parsing --target-org \n\tNo authorization information found for NonexistentOrg.\nSee more help with --help",
+  "exitCode": 2,
+  "actions": ["It looks like you mistyped the username or alias. Did you mean \"test-org\"?"],
+  "context": "OrgDisplayCommand",
+  "stack": "NamedOrgNotFoundError: Parsing --target-org \n\tNo authorization information found for NonexistentOrg.\nSee more help with --help\n    at SfCommandError.from (/salesforce/sf-plugins-core/lib/SfCommandError.js:48:16)",
+  "cause": "undefined",
+  "warnings": [],
+  "code": "NamedOrgNotFoundError",
+  "status": 2,
+  "commandName": "OrgDisplayCommand"
+}

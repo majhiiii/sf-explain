@@ -1,0 +1,21 @@
+id: duplicate-value-on-record
+title: Duplicate value found on record during deployment
+status: verified
+severity: error
+confidence: high
+match:
+  all:
+    - field: message
+      contains: 'duplicate value found'
+    - field: message
+      contains: 'duplicates value on record with id'
+explain: >
+  A metadata deployment or data operation attempted to create or update a record with a unique field value that already exists in the target org.
+  Salesforce prevents saving duplicate records that violate unique index constraints.
+fix:
+  - Identify the conflicting record ID mentioned in the error message and retrieve or query it.
+  - Delete or update the conflicting record in the target org, or modify your metadata to avoid colliding values.
+sources:
+  - url: https://issues.salesforce.com/issue/a028c00000gAwZ2AAK
+    title: Salesforce Known Issue - Duplicate value found on record
+tags: [deploy, database]

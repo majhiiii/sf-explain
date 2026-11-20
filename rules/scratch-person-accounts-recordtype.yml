@@ -1,0 +1,20 @@
+id: scratch-person-accounts-recordtype
+title: Person Accounts record type cannot be found in scratch org
+status: verified
+severity: error
+confidence: high
+match:
+  all:
+    - field: message
+      contains: 'Account.PersonAccount'
+    - field: message
+      contains: 'cannot be found'
+explain: >
+  Person Accounts are enabled in the scratch org, but deploying Person Account record types fails because the CLI cannot resolve Account.PersonAccount. Official Salesforce DX documentation lists no direct workaround for this limitation.
+fix:
+  - Exclude Account.PersonAccount record types from scratch org metadata deployments.
+  - If Person Account metadata must be tested, test in a Developer Edition org or sandbox instead.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_considerations.htm
+    title: Limitations for Salesforce DX
+tags: [scratch-org, person-accounts, deploy]

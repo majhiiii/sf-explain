@@ -1,0 +1,6 @@
+{
+  "status": 1,
+  "name": "DmlError",
+  "message": "Insert failed: DUPLICATE_VALUE: record already exists",
+  "exitCode": 1
+}
