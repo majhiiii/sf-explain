@@ -30,6 +30,8 @@ export interface FailureAnalysis {
   }>;
 }
 
+export type AnalysisMatch = FailureAnalysis['matches'][number];
+
 export interface ExplainOutput {
   schemaVersion: number;
   analyzed: number;

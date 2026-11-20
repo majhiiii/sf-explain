@@ -259,4 +259,111 @@ describe('explain command', () => {
     const rawResult = await Explain.run(['--json', '--no-redact']);
     expect(rawResult.unmatched[0].message).to.include('Custom_Tax_Rate__c');
   });
+
+  it('outputs clean markdown summary with --summary flag', async () => {
+    const fixturePath = path.resolve('test/fixtures/rules/no-target-org-auth/positive-1.json');
+    const fixture = fs.readFileSync(fixturePath, 'utf8');
+
+    $$.SANDBOX.stub(Explain.prototype, 'readStdin').resolves(fixture);
+
+    await Explain.run(['--summary']);
+
+    const output = sfCommandStubs.log
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+
+    expect(output).to.include('### 🔍 sf-explain Analysis');
+    expect(output).to.include('**1 problem found**, **1 explained**.');
+    expect(output).to.include('🔴 Root Cause 1:');
+    expect(output).to.include('- **Rule:** `no-target-org-auth`');
+    expect(output).to.include('- **Likely Cause:**');
+    expect(output).to.include('- **Recommended Fix:**');
+    expect(output).to.include('- **Source:**');
+  });
+
+  it('writes output to file with --output-file flag', async () => {
+    const fixturePath = path.resolve('test/fixtures/rules/no-target-org-auth/positive-1.json');
+    const fixture = fs.readFileSync(fixturePath, 'utf8');
+    const outputPath = path.resolve('tmp/test-output/result.md');
+
+    if (fs.existsSync(outputPath)) {
+      fs.unlinkSync(outputPath);
+    }
+
+    $$.SANDBOX.stub(Explain.prototype, 'readStdin').resolves(fixture);
+
+    await Explain.run(['--summary', '--output-file', outputPath]);
+
+    expect(fs.existsSync(outputPath)).to.be.true;
+    const fileContent = fs.readFileSync(outputPath, 'utf8');
+    expect(fileContent).to.include('### 🔍 sf-explain Analysis');
+    expect(fileContent).to.include('- **Rule:** `no-target-org-auth`');
+
+    fs.unlinkSync(outputPath);
+  });
+
+  it('filters failures using --severity-threshold flag', async () => {
+    const mixedDeploy = JSON.stringify({
+      status: 1,
+      result: {
+        details: {
+          componentFailures: [
+            {
+              componentType: 'ApexClass',
+              fileName: 'force-app/main/default/classes/OrderService.cls',
+              problemType: 'Warning',
+              problem: 'Deprecated method called',
+            },
+            {
+              componentType: 'ApexClass',
+              fileName: 'force-app/main/default/classes/OrderService.cls',
+              problemType: 'Error',
+              problem: "Expecting '}' but was: ']'",
+            },
+          ],
+        },
+      },
+    });
+
+    $$.SANDBOX.stub(Explain.prototype, 'readStdin').resolves(mixedDeploy);
+
+    // With --severity-threshold error: only the error should remain
+    const errorOnly = await Explain.run(['--json', '--severity-threshold', 'error']);
+    expect(errorOnly.analyzed).to.equal(1);
+    expect(errorOnly.results[0].matches[0].ruleId).to.equal('apex-syntax-error');
+
+    // With --severity-threshold warning: both should remain
+    const warningAndError = await Explain.run(['--json', '--severity-threshold', 'warning']);
+    expect(warningAndError.analyzed).to.equal(2);
+  });
+
+  it('fails with exit 1 when --fail-on-unmatched is set and unmatched failures exist', async () => {
+    const unknownFailure = JSON.stringify({
+      status: 1,
+      name: 'CompletelyUnknownInternalError',
+      message: 'Some unrecognized internal error',
+    });
+
+    $$.SANDBOX.stub(Explain.prototype, 'readStdin').resolves(unknownFailure);
+
+    try {
+      await Explain.run(['--fail-on-unmatched']);
+      expect.fail('Should have thrown an error');
+    } catch (err: unknown) {
+      const error = err as Error;
+      expect(error.message).to.include('failure(s) had no matching rule');
+    }
+  });
+
+  it('succeeds with exit 0 when --fail-on-unmatched is set and all failures match', async () => {
+    const fixturePath = path.resolve('test/fixtures/rules/no-target-org-auth/positive-1.json');
+    const fixture = fs.readFileSync(fixturePath, 'utf8');
+
+    $$.SANDBOX.stub(Explain.prototype, 'readStdin').resolves(fixture);
+
+    const result = await Explain.run(['--fail-on-unmatched']);
+    expect(result.explained).to.equal(1);
+    expect(result.unmatched).to.have.lengthOf(0);
+  });
 });

@@ -5,6 +5,7 @@
  */
 
 import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { Flags, SfCommand } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
@@ -14,14 +15,21 @@ import { Matcher } from '../engine/matcher.js';
 import { ContextProbes } from '../engine/probes.js';
 import { ExplainOutput, FailureAnalysis } from '../engine/types.js';
 import { groupFailures } from '../engine/grouper.js';
-import { Failure } from '../types.js';
+import { Failure, Severity } from '../types.js';
 import { renderHuman } from '../render/human.js';
 import { renderJson } from '../render/json.js';
 import { renderContribute } from '../render/contribute.js';
+import { renderSummary } from '../render/summary.js';
 import { redactObject } from '../redact.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('sf-explain', 'explain');
+
+const SEVERITY_LEVELS: Record<Severity, number> = {
+  info: 1,
+  warning: 2,
+  error: 3,
+};
 
 export default class Explain extends SfCommand<ExplainOutput> {
   public static readonly summary = messages.getMessage('summary');
@@ -56,6 +64,30 @@ export default class Explain extends SfCommand<ExplainOutput> {
       required: false,
       default: false,
     }),
+    summary: Flags.boolean({
+      summary: messages.getMessage('flags.summary.summary'),
+      description: messages.getMessage('flags.summary.description'),
+      required: false,
+      default: false,
+    }),
+    'fail-on-unmatched': Flags.boolean({
+      summary: messages.getMessage('flags.fail-on-unmatched.summary'),
+      description: messages.getMessage('flags.fail-on-unmatched.description'),
+      required: false,
+      default: false,
+    }),
+    'severity-threshold': Flags.custom<Severity>({
+      options: ['error', 'warning', 'info'],
+    })({
+      summary: messages.getMessage('flags.severity-threshold.summary'),
+      description: messages.getMessage('flags.severity-threshold.description'),
+      required: false,
+    }),
+    'output-file': Flags.string({
+      summary: messages.getMessage('flags.output-file.summary'),
+      description: messages.getMessage('flags.output-file.description'),
+      required: false,
+    }),
   };
 
   public async run(): Promise<ExplainOutput> {
@@ -81,7 +113,26 @@ export default class Explain extends SfCommand<ExplainOutput> {
     }
 
     const rawFailures = normalizeInput(rawInput);
-    const failures = flags['no-redact'] ? rawFailures : rawFailures.map((f) => redactObject(f));
+    let failures = flags['no-redact'] ? rawFailures : rawFailures.map((f) => redactObject(f));
+
+    if (flags['severity-threshold']) {
+      const minLevel = SEVERITY_LEVELS[flags['severity-threshold']];
+      failures = failures.filter((f) => {
+        const sev = f.severity ?? 'error';
+        return SEVERITY_LEVELS[sev] >= minLevel;
+      });
+    }
+
+    if (failures.length === 0) {
+      const threshold = String(flags['severity-threshold']);
+      const emptyMsg = `No failures met the severity threshold (${threshold}).`;
+      this.log(emptyMsg);
+      if (flags['output-file']) {
+        fs.mkdirSync(path.dirname(path.resolve(flags['output-file'])), { recursive: true });
+        fs.writeFileSync(flags['output-file'], emptyMsg, 'utf8');
+      }
+      return renderJson([], []);
+    }
 
     if (flags.contribute) {
       // Contribution templates are always fully redacted for public issue sharing
@@ -121,7 +172,21 @@ export default class Explain extends SfCommand<ExplainOutput> {
     const grouped = groupFailures(results, unmatched);
     const output = renderJson(results, unmatched, grouped.groups);
 
-    this.log(renderHuman(grouped, { showCascade: flags['show-cascade'] }));
+    const formattedOutput = flags.summary
+      ? renderSummary(grouped, { showCascade: flags['show-cascade'] })
+      : renderHuman(grouped, { showCascade: flags['show-cascade'] });
+
+    this.log(formattedOutput);
+
+    if (flags['output-file']) {
+      const fileContent = this.jsonEnabled() ? JSON.stringify(output, null, 2) : formattedOutput;
+      fs.mkdirSync(path.dirname(path.resolve(flags['output-file'])), { recursive: true });
+      fs.writeFileSync(flags['output-file'], fileContent, 'utf8');
+    }
+
+    if (flags['fail-on-unmatched'] && unmatched.length > 0) {
+      this.error(`${unmatched.length} failure(s) had no matching rule.`, { exit: 1 });
+    }
 
     return output;
   }

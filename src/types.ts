@@ -5,9 +5,11 @@
  */
 
 export type FailureSource = 'deploy' | 'retrieve' | 'test' | 'scratch-org' | 'auth' | 'generic' | 'text';
+export type Severity = 'error' | 'warning' | 'info';
 
 export interface Failure {
   source: FailureSource;
+  severity?: Severity;
   command?: string;
   name?: string;
   code?: string;

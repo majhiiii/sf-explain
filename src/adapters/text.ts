@@ -4,9 +4,9 @@
  * Licensed under the BSD 3-Clause license.
  */
 
-import { Failure } from '../types.js';
+import { Failure, Severity } from '../types.js';
 
-const COMPONENT_ERROR_REGEX = /^ERROR:\s+([a-zA-Z]:[\\/][^:]+|[^:]+):\s*(.*?)(?:\s+\((\d+):(\d+)\))?$/;
+const COMPONENT_ERROR_REGEX = /^(ERROR|WARNING):\s+([a-zA-Z]:[\\/][^:]+|[^:]+):\s*(.*?)(?:\s+\((\d+):(\d+)\))?$/;
 
 function extractComponentMetadata(filePath: string): { type?: string; name?: string } | undefined {
   const baseName = filePath.split(/[\\/]/).pop() ?? '';
@@ -28,13 +28,16 @@ function parseComponentErrors(lines: string[]): Failure[] {
   for (const line of lines) {
     const lineMatch = COMPONENT_ERROR_REGEX.exec(line.trim());
     if (lineMatch) {
-      const filePath = lineMatch[1].trim();
-      const msg = lineMatch[2].trim();
-      const lineNum = lineMatch[3] ? Number.parseInt(lineMatch[3], 10) : undefined;
-      const colNum = lineMatch[4] ? Number.parseInt(lineMatch[4], 10) : undefined;
+      const prefix = lineMatch[1];
+      const filePath = lineMatch[2].trim();
+      const msg = lineMatch[3].trim();
+      const lineNum = lineMatch[4] ? Number.parseInt(lineMatch[4], 10) : undefined;
+      const colNum = lineMatch[5] ? Number.parseInt(lineMatch[5], 10) : undefined;
+      const severity: Severity = prefix === 'WARNING' ? 'warning' : 'error';
 
       failures.push({
         source: 'deploy',
+        severity,
         message: msg,
         file: filePath,
         line: lineNum,

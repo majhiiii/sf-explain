@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  */
 
-import { Failure } from '../types.js';
+import { Failure, Severity } from '../types.js';
 
 interface RawComponentFailure {
   columnNumber?: number;
@@ -51,6 +51,7 @@ export class DeployResultAdapter {
       return [
         {
           source: 'deploy',
+          severity: 'error',
           command: 'project deploy start',
           message: parsed.result.errorMessage,
           exitCode,
@@ -59,19 +60,23 @@ export class DeployResultAdapter {
       ];
     }
 
-    return failuresList.map((cf) => ({
-      source: 'deploy',
-      command: 'project deploy start',
-      message: cf.problem ?? 'Component deployment failed',
-      component: {
-        type: cf.componentType,
-        name: cf.fullName,
-      },
-      file: cf.fileName,
-      line: cf.lineNumber,
-      column: cf.columnNumber,
-      exitCode,
-      raw: cf,
-    }));
+    return failuresList.map((cf) => {
+      const severity: Severity = cf.problemType?.toLowerCase() === 'warning' ? 'warning' : 'error';
+      return {
+        source: 'deploy',
+        severity,
+        command: 'project deploy start',
+        message: cf.problem ?? 'Component deployment failed',
+        component: {
+          type: cf.componentType,
+          name: cf.fullName,
+        },
+        file: cf.fileName,
+        line: cf.lineNumber,
+        column: cf.columnNumber,
+        exitCode,
+        raw: cf,
+      };
+    });
   }
 }

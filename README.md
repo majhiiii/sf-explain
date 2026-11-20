@@ -143,6 +143,39 @@ Analysis complete: 2 problems found, 1 explained
 
 ---
 
+## CI / CD Integration
+
+`sf-explain` includes purpose-built flags for CI/CD pipelines (GitHub Actions, GitLab CI, Azure DevOps, Bitbucket Pipelines) to summarize failures directly into PR comments or pipeline step summaries:
+
+### GitHub Actions Workflow Example
+
+```yaml
+- name: Deploy to Salesforce Org
+  id: deploy
+  run: sf project deploy start --source-dir force-app --json > deploy-result.json
+  continue-on-error: true
+
+- name: Explain Deployment Failures
+  if: steps.deploy.outcome == 'failure'
+  run: |
+    sf explain --file deploy-result.json --summary >> $GITHUB_STEP_SUMMARY
+```
+
+### CLI Flags Reference
+
+| Flag                           | Short | Description                                                                                     |
+| ------------------------------ | ----- | ----------------------------------------------------------------------------------------------- |
+| `--file <path>`                | `-f`  | Path to a file containing failed command output (JSON or text).                                 |
+| `--summary`                    |       | Outputs clean GitHub-flavored Markdown highlighting root causes, collapsed cascades, and fixes. |
+| `--output-file <path>`         |       | Writes the analysis output (Markdown, text, or JSON) directly to a file on disk.                |
+| `--fail-on-unmatched`          |       | Exits with status code 1 if any failure has no matching rule. Useful as a CI quality gate.      |
+| `--severity-threshold <level>` |       | Filters failures to only analyze items at or above `error`, `warning`, or `info`.               |
+| `--show-cascade`               |       | Shows all cascading compiler errors instead of collapsing them behind root causes.              |
+| `--contribute`                 | `-c`  | Generates a pre-filled, sanitized YAML rule template from the error output.                     |
+| `--no-redact`                  |       | Disables automated redaction of sensitive identifiers (for local debugging only).               |
+
+---
+
 ## Contributing Rules
 
 Got an error that wasn't explained? Generate a redacted rule skeleton right from the CLI:

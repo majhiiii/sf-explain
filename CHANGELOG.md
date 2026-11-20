@@ -10,7 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Complete offline Salesforce CLI error explanation plugin (`sf explain`).
-- 16 verified community-maintained rules with official documentation sources:
+- Root cause grouping engine (`src/engine/grouper.ts`) to collapse cascading compiler errors under primary root causes with `--show-cascade` flag.
+- CI/CD integration features:
+  - `--summary`: Formatted Markdown summary for PR comments and `$GITHUB_STEP_SUMMARY`.
+  - `--output-file <path>`: Writes human, markdown summary, or JSON output directly to disk.
+  - `--fail-on-unmatched`: Fails with exit code 1 if any failure has no matching rule.
+  - `--severity-threshold <level>`: Filters failures by severity (`error`, `warning`, `info`).
+- Privacy hardening (`src/redact.ts`) redacting Windows/Unix path prefixes, IPv4 addresses, JWT tokens, Named Credentials, private keys, and custom metadata objects/fields with `--no-redact` opt-out.
+- Automated fixture privacy audit script (`scripts/audit-fixtures.ts`) preventing sensitive org data leaks.
+- 50 verified community-maintained rules with official documentation sources across Auth, Deploy, Scratch Orgs, Flows, LWC, 2GP Packaging, Profiles, Apex Tests, and Schema Integrity:
   - `no-target-org-auth`: Target org authorization entry not found.
   - `not-a-sfdx-project`: Executing project commands outside an SFDX workspace.
   - `expired-auth-token`: Session or OAuth refresh token expired/revoked.
