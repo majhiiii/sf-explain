@@ -2,27 +2,69 @@
 
 [![CI](https://github.com/majhiiii/sf-explain/actions/workflows/test.yml/badge.svg)](https://github.com/majhiiii/sf-explain/actions/workflows/test.yml)
 [![Version](https://img.shields.io/npm/v/sf-explain.svg)](https://npmjs.org/package/sf-explain)
+[![License](https://img.shields.io/badge/license-BSD--3--Clause-blue.svg)](LICENSE.txt)
 
-An **offline Salesforce CLI plugin** (`sf explain`) that analyzes output from failed `sf` commands (deploy, retrieve, Apex test runs, scratch org creation, auth) and tells developers the likely cause and actionable fix.
+The missing **root cause analyzer and error explainer** for the Salesforce CLI (`sf explain`).
 
-Matching is powered entirely by **community-maintained YAML rules** — no LLMs, no AI APIs, and zero network calls at runtime.
+It analyzes failures from failed `sf` commands (deploy, retrieve, Apex tests, scratch orgs, auth, packaging), collapses cascading compiler noise, identifies the true root cause, and provides verified, actionable fixes with official documentation links.
 
----
-
-## Why sf-explain?
-
-Workarounds for common Salesforce CLI failures are scattered across documentation guides, known-issues pages, and GitHub issues. Developers usually only find them after hitting painful blockers. `sf-explain` puts verified knowledge one command away, and lets anyone contribute fixes via pull requests.
-
-### Core Principles
-
-- **100% Offline**: No network calls, telemetry, or analytics at runtime.
-- **Privacy First**: Sensitive data (tokens, session IDs, org IDs, emails, instance URLs, home paths) are automatically redacted before printing.
-- **Read-Only**: Inspects read-only local project files (`sfdx-project.json`, scratch definitions, `.forceignore`) to diagnose context, but never alters your project files.
-- **Fast Startup**: Loads pre-compiled JSON rules in well under 200 ms.
+Matching is powered entirely by **50+ community-maintained offline YAML rules** — **zero AI/LLMs**, **zero telemetry**, and **zero runtime network calls**.
 
 ---
 
-## Installation
+## ⚡ The Difference: Standard `sf` vs. `sf explain`
+
+> _"The Salesforce CLI already prints error messages — why do I need `sf explain`?"_
+
+The Salesforce CLI tells you **what syntax token failed**, but dumps every secondary compiler cascade equally and gives cryptic one-liners for complex errors. `sf explain` is designed for the errors that waste 30 minutes of developer time:
+
+| Problem Scenario                                                     | Standard Salesforce CLI (`sf`)                                                                                                                                    | With `sf explain`                                                                                                                                            |
+| -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Cascading Compiler Errors** (e.g. 1 syntax typo causing 46 errors) | Dumps **46 separate errors** across your terminal. Developers waste 20 minutes inspecting 45 false "variable does not exist" and "method already defined" errors. | **Collapses 46 errors into 1 Root Cause** (e.g. mismatched bracket on line 159) and hides 45 cascading noise errors. Fix 1 line, everything compiles.        |
+| **Cryptic Auth & JWT Failures** (`INVALID_GRANT`, `invalid_client`)  | Outputs a generic one-line error: `INVALID_GRANT: expired or invalid assertion`.                                                                                  | Pinpoints the **4 real-world causes** (certificate expiration, clock drift, wrong username, Connected App pre-authorization) with step-by-step fix commands. |
+| **Scratch Org Failures** (`SignupDuplicateSettingsSpecified`)        | Prints cryptic internal exception codes with no guidance.                                                                                                         | Tells you the **exact setting conflict** in `project-scratch-def.json` and what line to remove.                                                              |
+| **Missing Schema & Metadata Dependencies**                           | Throws raw `FIELD_INTEGRITY_EXCEPTION` or `Cannot create Master-Detail`.                                                                                          | Explains the **deployment order requirement** (deploy as lookup first, populate parent IDs, convert to master-detail).                                       |
+| **CI / CD Pipelines**                                                | Raw ASCII terminal tables dumped into runner logs that developers ignore.                                                                                         | `--summary` outputs **clean GitHub-flavored Markdown** with collapsible details directly into `$GITHUB_STEP_SUMMARY` or PR comments.                         |
+| **Data Privacy & Leak Prevention**                                   | Logs expose local machine paths, developer usernames, emails, org IDs, and private tokens into CI logs.                                                           | **Automated offline redaction** of file paths, IP addresses, Named Credentials, private keys, and custom metadata (`*__c`) before printing.                  |
+
+---
+
+### Real-World Example: 46 Errors Collapsed to 1
+
+#### ❌ What standard `sf` outputs:
+
+```text
+=== Deploy Errors (46) ===
+ERROR: force-app/main/default/classes/B2BCreditLimitService.cls: Expecting '}' but was: ']' (159:10)
+ERROR: force-app/main/default/classes/B2BCreditLimitService.cls: Unexpected token '='. (168:32)
+ERROR: force-app/main/default/classes/B2BCreditLimitService.cls: Unexpected token '>'. (168:53)
+ERROR: force-app/main/default/classes/B2BCreditLimitService.cls: Variable does not exist: hierarchyAccountIds (164:33)
+ERROR: force-app/main/default/classes/B2BCreditLimitService.cls: Variable does not exist: res (176:13)
+ERROR: force-app/main/default/classes/B2BCreditLimitService.cls: Variable does not exist: res.availableCredit (178:63)
+... (40 more errors flooding your terminal)
+```
+
+#### ✅ What `sf explain` outputs:
+
+```text
+Analysis complete: 46 problems found (1 root cause, 45 cascading), 25 explained
+
+1) Expecting '}' but was: ']'
+   Location:    [REDACTED_PATH]\force-app\main\default\classes\B2BCreditLimitService.cls:159:10
+   Rule:        apex-syntax-error
+   Likely cause: The Apex compiler encountered a syntax or tokenization error in the source code.
+   Fix:
+                1. Check line 159 col 10 for mismatched braces {}, brackets [], or parentheses ().
+                2. Check for typos, unexpected operators, or misplaced punctuation around the token.
+                3. Ensure all statements terminate with a semicolon and string literals are closed.
+   Confidence:  high   Source: https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_defining.htm
+
+   ⚠️  45 cascading errors hidden (run with --show-cascade to view all)
+```
+
+---
+
+## 📦 Installation
 
 Install directly into the Salesforce CLI:
 
@@ -31,9 +73,9 @@ sf plugins install sf-explain
 ```
 
 > [!NOTE]
-> When installing third-party plugins that are not signed by Salesforce, the CLI may display a trust prompt:
+> When installing third-party plugins that are not signed by Salesforce, the CLI displays a trust confirmation:
 > `This plugin is not digitally signed. Do you want to continue to install it? (y/n)`
-> Press `y` to continue the installation.
+> Press `y` to continue. You can add `sf-explain` to your `unsignedPluginAllowList.json` to prevent future prompts.
 
 To link the repository locally for development:
 
@@ -47,149 +89,186 @@ sf plugins link .
 
 ---
 
-## Usage
+## 🚀 All Supported Commands & Usage Patterns
 
-### 1. Pipe JSON output from any sf command
+`sf-explain` works with any failing Salesforce CLI command through multiple invocation modes:
 
-```bash
-sf project deploy start --json | sf explain
-```
+### 1. Command Wrapper Mode (Zero manual piping)
 
-### 2. Pipe plain-text error output
-
-```bash
-sf project deploy start 2>&1 | sf explain
-```
-
-### 3. Analyze a saved failure file
-
-```bash
-sf explain --file deploy-result.json
-```
-
-### 4. Run a command and explain on failure (wrapper mode)
+Prefix any `sf` command with `sf explain --`. It runs your command normally; if the command succeeds, it exits silently; if it fails, it intercepts the error and explains it immediately:
 
 ```bash
 sf explain -- sf project deploy start --source-dir force-app
+sf explain -- sf org create scratch -f config/project-scratch-def.json
+sf explain -- sf apex run test --test-level RunLocalTests
+sf explain -- sf org login jwt --client-id <id> --jwt-key-file <key> --username <user>
 ```
 
-### 5. Structured JSON output for CI / CD pipelines
+### 2. Pipe Plain Text from Terminal Output
+
+Pipe stdout and stderr directly from any command:
 
 ```bash
-sf project deploy start --json | sf explain --json
+sf project deploy start 2>&1 | sf explain
+sf apex run test --code-coverage 2>&1 | sf explain
+sf project retrieve start 2>&1 | sf explain
 ```
 
-Output adheres to a versioned schema (`schemaVersion: 1`):
+### 3. Pipe JSON Output
 
-```json
-{
-  "status": 0,
-  "result": {
-    "schemaVersion": 1,
-    "analyzed": 1,
-    "explained": 1,
-    "results": [
-      {
-        "failure": { "source": "generic", "name": "NamedOrgNotFoundError", "message": "..." },
-        "matches": [
-          {
-            "ruleId": "no-target-org-auth",
-            "title": "Target org authorization information not found",
-            "explain": "The target org specified by alias or username has no valid authorization entry locally.",
-            "fix": [
-              "Run \"sf org login web --alias <alias>\" to authorize the org.",
-              "Set a default target org with \"sf config set target-org <alias>\"."
-            ],
-            "confidence": "high",
-            "sources": [
-              {
-                "url": "https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_org_commands_unified.htm",
-                "title": "Salesforce CLI Org Commands Reference"
-              }
-            ],
-            "why": [
-              "field 'name' equals 'NamedOrgNotFoundError'",
-              "field 'message' contains 'No authorization information found for'"
-            ]
-          }
-        ]
-      }
-    ],
-    "unmatched": []
-  }
-}
+Pipe structured JSON from any `sf` command:
+
+```bash
+sf project deploy start --json | sf explain
+sf org create scratch --json | sf explain
+sf package version create --json | sf explain
+```
+
+### 4. Analyze a Saved Log or Result File
+
+Read from an existing build artifact or failure log:
+
+```bash
+sf explain --file deploy-result.json
+sf explain --file build-failure.log
+```
+
+### 5. Expand Cascading Errors (`--show-cascade`)
+
+By default, cascading secondary compiler errors are collapsed under the root cause. Use `--show-cascade` to view every hidden error with its exact file and line number:
+
+```bash
+sf explain --file deploy-result.json --show-cascade
+```
+
+### 6. Filter by Severity Level (`--severity-threshold`)
+
+Only analyze errors at or above a minimum severity level (`error`, `warning`, `info`):
+
+```bash
+sf explain --file deploy-result.json --severity-threshold error
+```
+
+### 7. Output Formatted Markdown for CI/CD (`--summary`)
+
+Generate a structured GitHub-flavored Markdown report perfect for PR comments, Slack notifications, or `$GITHUB_STEP_SUMMARY`:
+
+```bash
+sf explain --file deploy-result.json --summary
+```
+
+### 8. Write Results Directly to File (`--output-file`)
+
+Save the analysis directly to disk without shell redirects:
+
+```bash
+sf explain --file deploy-result.json --output-file results/analysis.md --summary
+sf explain --file deploy-result.json --output-file results/analysis.json --json
+```
+
+### 9. CI Quality Gate (`--fail-on-unmatched`)
+
+Exit with status code `1` if any error encountered does not have a matching rule (useful to ensure zero unexplained errors in release pipelines):
+
+```bash
+sf explain --file deploy-result.json --fail-on-unmatched
+```
+
+### 10. Local Debugging Without Redaction (`--no-redact`)
+
+Sensitive identifiers (org IDs, usernames, tokens, local paths, custom metadata) are redacted by default. Disable redaction for local debugging:
+
+```bash
+sf explain --file deploy-result.json --no-redact
+```
+
+### 11. Generate a Community Rule Skeleton (`--contribute`)
+
+Encountered an unexplained error? Generate an offline, sanitized YAML template ready for contribution:
+
+```bash
+sf project deploy start --json | sf explain --contribute
+sf explain --file unknown-error.json --contribute
 ```
 
 ---
 
-## Sample Output
+## 🛠️ CLI Flags Reference
 
-```
-Analysis complete: 2 problems found, 1 explained
-
-1) Parsing --target-org
-   Rule:        no-target-org-auth
-   Likely cause: The target org specified by alias or username has no valid authorization entry locally. This happens when the alias is misspelled, the org was never authenticated in this environment, or local auth files were cleared.
-   Fix:
-                1. Run "sf org login web --alias <alias>" to authorize the org.
-                2. Check authorized orgs with "sf org list" to verify the correct alias name.
-                3. Set a default target org with "sf config set target-org <alias>".
-   Confidence:  high   Source: https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_org_commands_unified.htm
-   Why matched: field 'name' equals 'NamedOrgNotFoundError'; field 'message' contains 'No authorization information found for'
-
-2) Nonexistent flag: --foo
-   No matching rule. Want to add one? Run: sf explain --contribute
-```
+| Flag                           | Short | Type      | Default | Description                                                                                             |
+| ------------------------------ | ----- | --------- | ------- | ------------------------------------------------------------------------------------------------------- |
+| `--file <path>`                | `-f`  | `file`    |         | Path to a file containing failed command output (JSON or text).                                         |
+| `--summary`                    |       | `boolean` | `false` | Outputs compact GitHub-flavored Markdown highlighting root causes, collapsed cascades, fixes, and docs. |
+| `--output-file <path>`         |       | `string`  |         | Writes analysis output (Markdown, text, or JSON) directly to a file on disk.                            |
+| `--show-cascade`               |       | `boolean` | `false` | Displays all cascading and secondary compiler errors instead of collapsing them.                        |
+| `--fail-on-unmatched`          |       | `boolean` | `false` | Exits with status code `1` if any failure has no matching rule. CI quality gate.                        |
+| `--severity-threshold <level>` |       | `string`  | `error` | Filters failures by minimum severity (`error`, `warning`, `info`).                                      |
+| `--contribute`                 | `-c`  | `boolean` | `false` | Generates a pre-filled, sanitized YAML rule template from the error output.                             |
+| `--no-redact`                  |       | `boolean` | `false` | Disables automated redaction of sensitive identifiers (for local debugging only).                       |
+| `--json`                       |       | `boolean` | `false` | Formats output as versioned JSON (`schemaVersion: 1`) for machine consumption.                          |
 
 ---
 
-## CI / CD Integration
+## 🤖 CI / CD Pipeline Integration
 
-`sf-explain` includes purpose-built flags for CI/CD pipelines (GitHub Actions, GitLab CI, Azure DevOps, Bitbucket Pipelines) to summarize failures directly into PR comments or pipeline step summaries:
+Integrate `sf-explain` into your continuous integration workflows to give developers instant, actionable PR feedback whenever builds fail:
 
-### GitHub Actions Workflow Example
+### GitHub Actions Example
 
 ```yaml
-- name: Deploy to Salesforce Org
-  id: deploy
-  run: sf project deploy start --source-dir force-app --json > deploy-result.json
-  continue-on-error: true
+name: Salesforce CI Pipeline
+on: [pull_request]
 
-- name: Explain Deployment Failures
-  if: steps.deploy.outcome == 'failure'
-  run: |
-    sf explain --file deploy-result.json --summary >> $GITHUB_STEP_SUMMARY
+jobs:
+  validate-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Salesforce CLI & sf-explain
+        run: |
+          npm install -g @salesforce/cli
+          echo "y" | sf plugins install sf-explain
+
+      - name: Deploy to Scratch Org
+        id: deploy
+        run: sf project deploy start --dry-run --json > deploy-result.json
+        continue-on-error: true
+
+      - name: Explain Failures in Step Summary
+        if: steps.deploy.outcome == 'failure'
+        run: |
+          sf explain --file deploy-result.json --summary >> $GITHUB_STEP_SUMMARY
 ```
-
-### CLI Flags Reference
-
-| Flag                           | Short | Description                                                                                     |
-| ------------------------------ | ----- | ----------------------------------------------------------------------------------------------- |
-| `--file <path>`                | `-f`  | Path to a file containing failed command output (JSON or text).                                 |
-| `--summary`                    |       | Outputs clean GitHub-flavored Markdown highlighting root causes, collapsed cascades, and fixes. |
-| `--output-file <path>`         |       | Writes the analysis output (Markdown, text, or JSON) directly to a file on disk.                |
-| `--fail-on-unmatched`          |       | Exits with status code 1 if any failure has no matching rule. Useful as a CI quality gate.      |
-| `--severity-threshold <level>` |       | Filters failures to only analyze items at or above `error`, `warning`, or `info`.               |
-| `--show-cascade`               |       | Shows all cascading compiler errors instead of collapsing them behind root causes.              |
-| `--contribute`                 | `-c`  | Generates a pre-filled, sanitized YAML rule template from the error output.                     |
-| `--no-redact`                  |       | Disables automated redaction of sensitive identifiers (for local debugging only).               |
 
 ---
 
-## Contributing Rules
+## 🔒 Privacy & Security Guarantees
 
-Got an error that wasn't explained? Generate a redacted rule skeleton right from the CLI:
-
-```bash
-sf <failing-command> --json | sf explain --contribute
-```
-
-This prints a sanitized JSON snippet and a pre-filled YAML skeleton ready to copy into `rules/<rule-id>.yml`.
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for full instructions on authoring YAML rules, testing with positive and negative fixtures, and submitting pull requests.
+- **100% Offline Execution**: Does not make network calls, fetch remote URLs, or ping external servers.
+- **Zero AI / LLM Calls**: All matching is deterministic via compiled YAML rules. Your proprietary code and schema never touch an AI API.
+- **Automated Privacy Redaction**: Automatically redacts local machine path prefixes (`C:\Users\...`), IPv4 addresses, Named Credentials, private keys, JWT tokens, Salesforce org IDs, session tokens, and custom metadata (`*__c`, `*__r`, `*__mdt`).
+- **Read-Only**: Inspects local project configuration (`sfdx-project.json`, `.forceignore`) in read-only mode to diagnose context. Never alters your source files.
 
 ---
 
-## License
+## 🤝 Contributing Rules
 
-BSD-3-Clause. See LICENSE.txt for details.
+Got an error that wasn't explained? Authoring rules takes less than 5 minutes:
+
+1. Run the failing command into `--contribute`:
+   ```bash
+   sf explain --file failed-deploy.json --contribute
+   ```
+2. Copy the generated YAML skeleton into `rules/<rule-id>.yml`.
+3. Provide positive and negative fixtures under `test/fixtures/rules/<rule-id>/`.
+4. Run `yarn build && yarn test` to verify.
+5. Open a pull request!
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for full instructions and authoring standards.
+
+---
+
+## 📄 License
+
+BSD-3-Clause. See [LICENSE.txt](LICENSE.txt) for details.
