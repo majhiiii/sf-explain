@@ -1,0 +1,22 @@
+id: permset-entity-not-supported
+title: Entity not supported for profile or permission set in target org
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)Entity not supported for (profile|permission set):\s*[a-zA-Z0-9_]+'
+    - field: message
+      regex: '(?i)entity is not supported for [a-zA-Z0-9_]+'
+explain: >
+  A Profile or Permission Set contains an <objectPermissions> block for an sObject that is not supported
+  by the target org's edition or enabled features (for example, Person Accounts, Territory Management, or Knowledge).
+fix:
+  - Check the reported entity name in your *.profile-meta.xml or *.permissionset-meta.xml file.
+  - Remove the <objectPermissions> and related <fieldPermissions> for that entity from the XML file.
+  - If the entity represents a feature (such as Person Accounts), ensure the feature is activated in the target org before deploying permissions.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_profile.htm
+    title: Salesforce Metadata API - Profile Object Permissions
+tags: [permissions, deploy, profile]

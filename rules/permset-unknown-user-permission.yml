@@ -1,0 +1,23 @@
+id: permset-unknown-user-permission
+title: Unknown user permission in Profile or Permission Set
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)Unknown user permission:\s*[a-zA-Z0-9]+'
+    - field: message
+      contains: 'userPermissions'
+explain: >
+  A deployed Profile or Permission Set contains a user permission that is not supported by the target
+  org edition or enabled features (for example, permissions associated with CRM Analytics, Digital Experiences,
+  or Einstein AI when those features are not licensed in the target environment).
+fix:
+  - Check the reported permission name in your *.profile-meta.xml or *.permissionset-meta.xml file.
+  - Remove the <userPermissions> block for the unsupported permission from the XML file.
+  - Alternatively, enable the prerequisite feature or provision the required user license in the target org before deploying.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_profile.htm
+    title: Salesforce Metadata API - Profile and PermissionSet
+tags: [permissions, deploy, profile]

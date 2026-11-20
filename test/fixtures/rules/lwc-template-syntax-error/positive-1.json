@@ -1,0 +1,17 @@
+{
+  "status": 1,
+  "result": {
+    "details": {
+      "componentFailures": [
+        {
+          "componentType": "LightningComponentBundle",
+          "fileName": "force-app/main/default/lwc/cartSummary/cartSummary.html",
+          "fullName": "cartSummary",
+          "problem": "LWC1002: Invalid template syntax: Unexpected token in expression",
+          "problemType": "Error",
+          "success": false
+        }
+      ]
+    }
+  }
+}

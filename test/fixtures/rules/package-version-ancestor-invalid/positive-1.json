@@ -1,0 +1,6 @@
+{
+  "name": "AncestorVersionInvalid",
+  "message": "The ancestor version [04t000000000000] specified in the sfdx-project.json is not valid for this package.",
+  "exitCode": 1,
+  "status": 1
+}

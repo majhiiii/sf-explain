@@ -1,0 +1,17 @@
+{
+  "status": 1,
+  "result": {
+    "details": {
+      "componentFailures": [
+        {
+          "componentType": "PermissionSet",
+          "fileName": "force-app/main/default/permissionsets/AnalyticsAdmin.permissionset-meta.xml",
+          "fullName": "AnalyticsAdmin",
+          "problem": "Unknown user permission: InsightsAdmin",
+          "problemType": "Error",
+          "success": false
+        }
+      ]
+    }
+  }
+}

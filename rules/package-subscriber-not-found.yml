@@ -1,0 +1,23 @@
+id: package-subscriber-not-found
+title: Subscriber package version not found in target org pod
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)Subscriber package version not found:\s*04t'
+    - field: message
+      regex: '(?i)Package version 04t[a-zA-Z0-9]{12,15} not found'
+explain: >
+  The subscriber package version ID (starting with 04t) could not be resolved by the installation org.
+  This happens when the package version was just created and has not yet replicated globally,
+  the package is private and the target org has not been granted access, or the 04t ID was mistyped.
+fix:
+  - If the package version was created recently, wait 5 to 15 minutes for Salesforce global metadata replication and retry.
+  - Check the package version list using "sf package version list" to verify the exact 04t ID.
+  - If installing into an external org, ensure the package version is promoted or the subscriber org is authorized.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_dev2gp_install_pkg.htm
+    title: Install a Second-Generation Managed Package
+tags: [package, 2gp, install]

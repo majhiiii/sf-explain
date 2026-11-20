@@ -1,0 +1,22 @@
+id: flow-version-already-active
+title: Active flow version cannot be overwritten
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      contains: 'Cannot update a Flow that is already active'
+    - field: message
+      regex: '(?i)flow.*?(already active|cannot be overwritten)'
+explain: >
+  Salesforce does not permit overwriting an active Flow definition directly in production or scratch
+  orgs where Flow versioning is enforced. The flow must be deployed as a new inactive version or deactivated prior to deployment.
+fix:
+  - In Salesforce Setup, open Flow Builder for this flow, save a new version, and deploy the new version.
+  - Alternatively, deactivate the active flow version in the target org before running your deployment.
+  - If deploying via CI/CD, set "apiVersion" to an API version that supports the Flow definition structure.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_visual_workflow.htm
+    title: Salesforce Metadata API - Flow
+tags: [flow, deploy]

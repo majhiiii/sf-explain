@@ -1,0 +1,6 @@
+{
+  "name": "PackageNotFound",
+  "message": "Subscriber package version not found: 04t000000000000",
+  "exitCode": 1,
+  "status": 1
+}

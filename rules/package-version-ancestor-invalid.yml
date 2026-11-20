@@ -1,0 +1,23 @@
+id: package-version-ancestor-invalid
+title: Package version ancestor invalid in sfdx-project.json
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)ancestor version.*?is not valid for this package'
+    - field: message
+      contains: 'AncestorVersionInvalid'
+explain: >
+  When creating a second-generation package (2GP) version, the ancestorId or ancestorVersion
+  specified in sfdx-project.json must be a previously released (promoted) package version from
+  the same package lineage. Unreleased or non-existent version IDs cannot be used as ancestors.
+fix:
+  - Check the "ancestorId" or "ancestorVersion" field in sfdx-project.json for this package directory.
+  - Ensure the specified ancestor package version was promoted using "sf package version promote".
+  - If creating the initial version of a package, omit "ancestorVersion" or set it to HIGHEST if valid released versions exist.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_dev2gp_ancestor_versions.htm
+    title: Second-Generation Managed Packages - Package Version Ancestry
+tags: [package, 2gp]

@@ -1,0 +1,23 @@
+id: lwc-template-syntax-error
+title: LWC compiler error - Invalid template syntax
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)LWC\d{4}:\s*(Invalid template syntax|Duplicate public property|Missing required attribute)'
+    - field: message
+      regex: '(?i)Template compilation error:\s*LWC'
+explain: >
+  The Lightning Web Component compiler encountered a malformed directive or syntax error in an HTML
+  template file. Common causes include unclosed HTML tags, invalid directive expressions
+  (such as unquoted strings or unsupported expressions in lwc:if / if:true), or duplicate attributes.
+fix:
+  - Check the reported HTML file and line number in your "lwc" directory.
+  - Verify that template directives follow LWC syntax (e.g. lwc:if={condition} or for:each={records} for:item="item").
+  - Ensure all HTML tags are properly closed and attribute values are correctly quoted.
+sources:
+  - url: https://developer.salesforce.com/docs/platform/lwc/guide/templates-syntax.html
+    title: Lightning Web Components Developer Guide - HTML Template Syntax
+tags: [lwc, template]

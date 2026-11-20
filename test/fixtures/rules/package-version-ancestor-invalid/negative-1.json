@@ -1,0 +1,6 @@
+{
+  "name": "NamedOrgNotFoundError",
+  "message": "No default target org found.",
+  "exitCode": 1,
+  "status": 1
+}

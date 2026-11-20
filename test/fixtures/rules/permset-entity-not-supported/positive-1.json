@@ -1,0 +1,17 @@
+{
+  "status": 1,
+  "result": {
+    "details": {
+      "componentFailures": [
+        {
+          "componentType": "Profile",
+          "fileName": "force-app/main/default/profiles/CustomAdmin.profile-meta.xml",
+          "fullName": "CustomAdmin",
+          "problem": "Entity not supported for profile: Territory2",
+          "problemType": "Error",
+          "success": false
+        }
+      ]
+    }
+  }
+}

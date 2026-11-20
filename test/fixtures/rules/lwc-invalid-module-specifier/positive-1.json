@@ -1,0 +1,17 @@
+{
+  "status": 1,
+  "result": {
+    "details": {
+      "componentFailures": [
+        {
+          "componentType": "LightningComponentBundle",
+          "fileName": "force-app/main/default/lwc/orderDashboard/orderDashboard.js",
+          "fullName": "orderDashboard",
+          "problem": "Invalid module id \"c/orderDetailModal\" for type \"module\"",
+          "problemType": "Error",
+          "success": false
+        }
+      ]
+    }
+  }
+}

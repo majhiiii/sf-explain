@@ -1,0 +1,22 @@
+id: flow-missing-field-reference
+title: Flow element contains invalid or missing field reference
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: "(?i)The element has an invalid reference to '[^']+'"
+    - field: message
+      regex: '(?i)is not a valid field on [a-zA-Z0-9_]+'
+explain: >
+  A step, formula, assignment, or filter element inside a Flow references an sObject field,
+  variable, or subflow resource that does not exist or was renamed in the target org.
+fix:
+  - Open the Flow definition file and search for the reported element name.
+  - Verify that the referenced field exists on the sObject in your project source or target org.
+  - If the referenced field is a custom field, ensure the custom field definition is deployed prior to or alongside the Flow.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_visual_workflow.htm
+    title: Flow Metadata API Deployment
+tags: [flow, deploy]

@@ -1,0 +1,26 @@
+id: lwc-invalid-module-specifier
+title: LWC import failed - Invalid module specifier
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)Invalid module id "[^"]+" for type "module"'
+    - field: message
+      regex: '(?i)Failed to resolve module specifier "[^"]+"'
+    - field: message
+      contains: 'No MODULE named markup://'
+explain: >
+  A Lightning Web Component JavaScript file imports another component using a module specifier
+  (such as "c/myComponent") that cannot be resolved. This is typically caused by a typo in the
+  component name, folder name case mismatches (LWC uses camelCase in imports and kebab-case in templates),
+  or omitting the imported component from the deployment bundle.
+fix:
+  - Check the import statement in your JS file and verify that the target component exists in your "lwc" directory.
+  - Remember that LWC imports use camelCase (e.g. "import myModal from 'c/myModal'") while template tags use kebab-case ("<c-my-modal>").
+  - Ensure that the imported component is included in your source directory and deployed alongside the consumer component.
+sources:
+  - url: https://developer.salesforce.com/docs/platform/lwc/guide/js-import-components.html
+    title: Lightning Web Components Developer Guide - Import Components
+tags: [lwc, deploy]
