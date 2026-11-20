@@ -203,7 +203,10 @@
     }
   },
   "homepage": "https://github.com/majhiiii/sf-explain",
-  "repository": "majhiiii/sf-explain",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/majhiiii/sf-explain.git"
+  },
   "bugs": "https://github.com/majhiiii/sf-explain/issues",
   "exports": "./lib/index.js",
   "type": "module",
