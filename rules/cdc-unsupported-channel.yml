@@ -1,0 +1,23 @@
+id: cdc-unsupported-channel
+title: Entity not supported for Change Data Capture channel
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)Cannot enable Change Data Capture for entity:\s*[a-zA-Z0-9_]+'
+    - field: message
+      regex: '(?i)PlatformEventChannelMember.*?(is invalid|not supported)'
+explain: >
+  A PlatformEventChannelMember was deployed to enable Change Data Capture (CDC) on an entity
+  that does not support CDC, or the entity does not exist in the target org. Only standard objects
+  listed in Salesforce documentation and custom objects support CDC.
+fix:
+  - Check the "selectedEntity" property in your *.platformEventChannelMember-meta.xml file.
+  - Review the Change Data Capture Developer Guide to verify whether the object is on the list of supported standard entities.
+  - Ensure the target custom object (*__c) is deployed before adding it to a custom CDC channel.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.change_data_capture.meta/change_data_capture/cdc_object_support.htm
+    title: Change Data Capture Developer Guide - Supported Entities
+tags: [cdc, events, deploy]

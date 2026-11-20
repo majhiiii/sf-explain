@@ -1,0 +1,22 @@
+id: custom-metadata-record-type-missing
+title: Custom metadata record deployed before type or field exists
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)no CustomField named [a-zA-Z0-9_]+ found on CustomMetadata'
+    - field: message
+      regex: '(?i)Cannot find Custom Metadata Type [a-zA-Z0-9_]+__mdt'
+explain: >
+  A Custom Metadata record (*.md-meta.xml) was deployed without the underlying Custom Metadata Type
+  definition (*.object-meta.xml) or custom field (*.field-meta.xml) being present in the deployment or target org.
+fix:
+  - Ensure the parent Custom Metadata Type definition file (<TypeName>__mdt.object-meta.xml) is included in your source directory.
+  - Deploy the Custom Metadata Type and its custom fields before deploying custom metadata records.
+  - Verify that the custom metadata record values match the field API names and data types.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.custom_metadata.meta/custom_metadata/custommetadatatypes_overview.htm
+    title: Custom Metadata Types Implementation Guide
+tags: [custom-metadata, deploy]

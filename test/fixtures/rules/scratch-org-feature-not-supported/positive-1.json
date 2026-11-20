@@ -1,0 +1,6 @@
+{
+  "name": "FeatureNotSupported",
+  "message": "Feature B2BCommerce is not supported for this org.",
+  "exitCode": 1,
+  "status": 1
+}

@@ -1,0 +1,22 @@
+id: deploy-flow-interview-paused
+title: Flow cannot be deleted or modified due to paused interviews
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)Paused flow interviews exist for this Flow'
+    - field: message
+      regex: '(?i)interview.*?(in progress|cannot be deleted)'
+explain: >
+  Salesforce prevents deleting or deploying changes that deactivate a Flow version when there
+  are paused, waiting, or in-flight flow interviews currently stored in the org.
+fix:
+  - In Salesforce Setup, navigate to "Paused and Failed Flow Interviews".
+  - Locate the paused interviews for this Flow and delete or resume them.
+  - Alternatively, deploy as a new Flow version rather than attempting to delete or overwrite the version with paused interviews.
+sources:
+  - url: https://help.salesforce.com/s/articleView?id=sf.flow_manage_interviews.htm&type=5
+    title: Manage Paused and Waiting Flow Interviews
+tags: [flow, deploy]

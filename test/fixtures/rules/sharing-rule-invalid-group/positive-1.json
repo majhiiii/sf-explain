@@ -1,0 +1,17 @@
+{
+  "status": 1,
+  "result": {
+    "details": {
+      "componentFailures": [
+        {
+          "componentType": "SharingRules",
+          "fileName": "force-app/main/default/sharingRules/Account.sharingRules-meta.xml",
+          "fullName": "Account.ShareWithSalesTeam",
+          "problem": "In field: sharedTo - no Group named Sales_Operations found",
+          "problemType": "Error",
+          "success": false
+        }
+      ]
+    }
+  }
+}

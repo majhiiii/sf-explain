@@ -1,0 +1,17 @@
+{
+  "status": 1,
+  "result": {
+    "details": {
+      "componentFailures": [
+        {
+          "componentType": "PlatformEventChannelMember",
+          "fileName": "force-app/main/default/platformEventChannelMembers/ChangeEvents_ApexLog.platformEventChannelMember-meta.xml",
+          "fullName": "ChangeEvents_ApexLog",
+          "problem": "Cannot enable Change Data Capture for entity: ApexLog",
+          "problemType": "Error",
+          "success": false
+        }
+      ]
+    }
+  }
+}

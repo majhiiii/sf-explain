@@ -1,0 +1,17 @@
+{
+  "status": 1,
+  "result": {
+    "details": {
+      "componentFailures": [
+        {
+          "componentType": "ValidationRule",
+          "fileName": "force-app/main/default/objects/Account/validationRules/Validate_Postal_Code.validationRule-meta.xml",
+          "fullName": "Account.Validate_Postal_Code",
+          "problem": "Syntax error. Missing ')' in formula expression",
+          "problemType": "Error",
+          "success": false
+        }
+      ]
+    }
+  }
+}

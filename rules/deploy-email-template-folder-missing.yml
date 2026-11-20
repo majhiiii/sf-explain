@@ -1,0 +1,22 @@
+id: deploy-email-template-folder-missing
+title: Email template parent folder missing or inaccessible
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)Cannot find folder:\s*[a-zA-Z0-9_]+'
+    - field: message
+      regex: '(?i)no EmailTemplate named\s+[a-zA-Z0-9_./]+\s+found'
+explain: >
+  An Email Template was deployed without its parent Email Folder definition (*.emailFolder-meta.xml)
+  being included in the deployment package, or the folder exists in Lightning but is not accessible via Metadata API.
+fix:
+  - Verify that the parent folder definition file (e.g. force-app/main/default/email/<FolderName>-meta.xml) exists.
+  - Deploy the EmailFolder metadata before or alongside the email templates contained within it.
+  - If using Lightning Email Templates, ensure the folder is shared with the deploying user profile.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_emailtemplate.htm
+    title: Salesforce Metadata API - EmailTemplate
+tags: [email, template, deploy]

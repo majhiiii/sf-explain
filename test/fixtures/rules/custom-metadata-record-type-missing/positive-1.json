@@ -1,0 +1,17 @@
+{
+  "status": 1,
+  "result": {
+    "details": {
+      "componentFailures": [
+        {
+          "componentType": "CustomMetadata",
+          "fileName": "force-app/main/default/customMetadata/App_Setting.Default_Config.md-meta.xml",
+          "fullName": "App_Setting.Default_Config",
+          "problem": "no CustomField named Endpoint_URL__c found on CustomMetadata",
+          "problemType": "Error",
+          "success": false
+        }
+      ]
+    }
+  }
+}

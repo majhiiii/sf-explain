@@ -1,0 +1,17 @@
+{
+  "status": 1,
+  "result": {
+    "details": {
+      "componentFailures": [
+        {
+          "componentType": "EmailTemplate",
+          "fileName": "force-app/main/default/email/Marketing/WelcomeEmail.email-meta.xml",
+          "fullName": "Marketing/WelcomeEmail",
+          "problem": "Cannot find folder: Marketing",
+          "problemType": "Error",
+          "success": false
+        }
+      ]
+    }
+  }
+}

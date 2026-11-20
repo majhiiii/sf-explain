@@ -1,0 +1,23 @@
+id: scratch-org-feature-not-supported
+title: Feature in scratch definition is not supported by Dev Hub
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)Feature [a-zA-Z0-9]+ is not supported for this org'
+    - field: message
+      regex: '(?i)A feature name is missing or invalid'
+explain: >
+  The scratch org definition file (project-scratch-def.json) includes a feature under "features"
+  that is not enabled, licensed, or supported by your Dev Hub org (for example, B2BCommerce,
+  HealthCloud, or ServiceCloud when not licensed in the Dev Hub).
+fix:
+  - Check the "features" array in project-scratch-def.json for misspelled feature names.
+  - Verify with your Dev Hub org administrator whether the requested feature license is provisioned in the Dev Hub.
+  - Temporarily remove the unsupported feature from project-scratch-def.json to proceed with scratch org creation.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_def_features.htm
+    title: Scratch Org Features Reference
+tags: [scratch-org, features]

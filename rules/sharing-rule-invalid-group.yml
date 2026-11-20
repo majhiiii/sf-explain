@@ -1,0 +1,22 @@
+id: sharing-rule-invalid-group
+title: Sharing rule references non-existent Public Group or Role
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)Group not found:\s*[a-zA-Z0-9_]+'
+    - field: message
+      regex: '(?i)In field:\s*sharedTo\s*-\s*no Group named\s+[a-zA-Z0-9_]+\s+found'
+explain: >
+  A deployed Sharing Rule references a Public Group, Role, or Territory that does not exist
+  in the target org and is not included in the current deployment payload.
+fix:
+  - Verify that the referenced Public Group (*.group-meta.xml) or Role (*.role-meta.xml) is defined in your source.
+  - Deploy the Public Group or Role to the target org before deploying sharing rules that target it.
+  - Check for typos in the DeveloperName specified under the <sharedTo> element in the sharing rule XML.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_sharingrules.htm
+    title: Salesforce Metadata API - SharingRules
+tags: [sharing, deploy]

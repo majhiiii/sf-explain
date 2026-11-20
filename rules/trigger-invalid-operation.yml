@@ -1,0 +1,23 @@
+id: trigger-invalid-operation
+title: Apex trigger specifies unsupported trigger event or operation
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)Invalid trigger operation:\s*[a-zA-Z\s]+'
+    - field: message
+      regex: '(?i)Trigger.*?(is not allowed for|cannot operate on)'
+explain: >
+  An Apex trigger definition specifies an event combination or operation that is not supported
+  by the target sObject. For example, platform events only support "after insert", while certain setup
+  or feed objects do not support "before delete" or "before update" events.
+fix:
+  - 'Check the trigger declaration header: "trigger <Name> on <Object> (<events>)".'
+  - 'If the target object is a Platform Event, ensure only "after insert" is specified.'
+  - 'Review the Salesforce Object Reference to confirm which trigger events (insert, update, delete, undelete) the target object supports.'
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers.htm
+    title: Apex Developer Guide - Triggers
+tags: [apex, trigger, deploy]

@@ -1,0 +1,25 @@
+id: deploy-validation-formula-syntax
+title: Formula syntax error in validation rule or formula field
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)Formula\(s\) that reference this field are invalid'
+    - field: message
+      regex: "(?i)Syntax error\\.\\s*(Missing|Extra)\\s*['\"()]"
+    - field: message
+      regex: '(?i)Field [a-zA-Z0-9_.]+ does not exist in formula'
+explain: >
+  A formula expression inside a Validation Rule (*.validationRule-meta.xml), Workflow Rule, or
+  Formula Field contains a syntax error such as mismatched parentheses, incorrect function argument counts,
+  or references a field name that does not exist on the target sObject.
+fix:
+  - 'Open the reported validation rule or formula field file and review the formula tag.'
+  - 'Count and balance all parentheses: every opening parenthesis must have a corresponding closing parenthesis.'
+  - 'Verify that field API names inside the formula are spelled correctly and exist on the target object.'
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.usefulFormulaQuotes.meta/usefulFormulaQuotes/formula_using_syntax.htm
+    title: Salesforce Formula Syntax Reference
+tags: [validation, formula, deploy]

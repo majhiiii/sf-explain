@@ -1,0 +1,17 @@
+{
+  "status": 1,
+  "result": {
+    "details": {
+      "componentFailures": [
+        {
+          "componentType": "ApexTrigger",
+          "fileName": "force-app/main/default/triggers/OrderEventTrigger.trigger",
+          "fullName": "OrderEventTrigger",
+          "problem": "Trigger OrderEventTrigger is invalid: Invalid trigger operation: before delete",
+          "problemType": "Error",
+          "success": false
+        }
+      ]
+    }
+  }
+}
