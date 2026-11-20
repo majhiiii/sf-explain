@@ -1,0 +1,40 @@
+name: 💡 Rule Request / Suggestion
+description: Suggest a Salesforce CLI error that sf-explain should explain and fix
+labels: ['rule-request', 'help wanted']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an error rule! Anyone can contribute rules without writing TypeScript.
+  - type: textarea
+    id: error_output
+    attributes:
+      label: Error Output
+      description: Paste the failed sf command output (ensure company secrets are removed, or run `sf <cmd> | sf explain --contribute`).
+      placeholder: "ERROR: ... Expecting '}' but was: ']'"
+    validations:
+      required: true
+  - type: textarea
+    id: cause
+    attributes:
+      label: Likely Cause
+      description: What is the underlying cause of this error?
+      placeholder: 'This happens when...'
+    validations:
+      required: true
+  - type: textarea
+    id: fix
+    attributes:
+      label: Recommended Fix Steps
+      description: What are the exact steps or CLI commands to fix it?
+      placeholder: '1. Open the file and...'
+    validations:
+      required: true
+  - type: input
+    id: doc_url
+    attributes:
+      label: Official Documentation / Source URL
+      description: Link to Salesforce Docs, Known Issue, or GitHub issue verifying the cause and fix.
+      placeholder: 'https://developer.salesforce.com/docs/...'
+    validations:
+      required: true
