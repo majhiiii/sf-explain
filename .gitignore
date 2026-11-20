@@ -1,5 +1,6 @@
-# local agent instructions
+# local agent instructions & design specs
 AGENTS.md
+DESIGN.md
 tmp/
 # use yarn by default, so ignore npm
 package-lock.json
@@ -37,8 +38,9 @@ npm-shrinkwrap.json
 oclif.manifest.json
 oclif.lock
 
-# local agent instructions
-AGENTS.md ALL
+# local agent instructions & design specs
+AGENTS.md
+DESIGN.md ALL
 *.tsbuildinfo
 .eslintcache
 .wireit
