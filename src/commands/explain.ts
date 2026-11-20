@@ -112,7 +112,12 @@ export default class Explain extends SfCommand<ExplainOutput> {
 
   // eslint-disable-next-line class-methods-use-this
   public runWrappedCommand(args: string[]): { output: string; status: number | null } {
-    const cmdStr = args.join(' ');
+    const finalArgs = [...args];
+    const isSfCommand = finalArgs[0] === 'sf' || finalArgs[0] === 'sfdx';
+    if (isSfCommand && !finalArgs.includes('--json')) {
+      finalArgs.push('--json');
+    }
+    const cmdStr = finalArgs.join(' ');
     const result = spawnSync(cmdStr, {
       shell: true,
       encoding: 'utf8',

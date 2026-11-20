@@ -1,0 +1,22 @@
+id: apex-syntax-error
+title: Apex syntax or parsing error
+status: verified
+severity: error
+confidence: high
+match:
+  all:
+    - field: component.type
+      equals: ApexClass
+  any:
+    - field: message
+      regex: "(?i)(expecting\\s+['\"].*['\"]\\s+but\\s+was|unexpected\\s+token|extra\\s+['\"].*['\"]|missing\\s+semicolon|illegal\\s+character)"
+explain: >
+  The Apex compiler encountered a syntax or tokenization error in the source code. This is usually caused by an unclosed brace, bracket, or parenthesis, a misplaced or unexpected character, or a missing semicolon.
+fix:
+  - Check the reported file and line number for mismatched braces {}, brackets [], or parentheses ().
+  - Check for typos, unexpected operators, or misplaced punctuation around the reported token.
+  - Ensure all statements terminate with a semicolon and string literals are properly closed.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_defining.htm
+    title: Salesforce Apex Developer Guide - Defining Apex Classes
+tags: [apex, deploy]

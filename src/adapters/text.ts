@@ -14,9 +14,15 @@ export class PlainTextAdapter {
       return [];
     }
 
+    const cleaned = trimmed
+      .split('\n')
+      .filter((l) => !/^[─━═\-_=~]{3,}/.test(l.trim()))
+      .join('\n')
+      .trim();
+
     // Match patterns like "Error (NamedOrgNotFoundError): ..." or "Error (2): ..."
     const errorWithParensRegex = /Error\s*\(([^)]+)\):\s*([\s\S]+)/m;
-    const match = errorWithParensRegex.exec(trimmed);
+    const match = errorWithParensRegex.exec(cleaned || trimmed);
 
     if (match) {
       const codeOrName = match[1].trim();
@@ -36,8 +42,8 @@ export class PlainTextAdapter {
 
     // Fallback: match "Error:\s*(.*)" or general plain text
     const errorPrefixRegex = /Error:\s*([\s\S]+)/m;
-    const prefixMatch = errorPrefixRegex.exec(trimmed);
-    const message = prefixMatch ? prefixMatch[1].trim() : trimmed;
+    const prefixMatch = errorPrefixRegex.exec(cleaned || trimmed);
+    const message = prefixMatch ? prefixMatch[1].trim() : cleaned || trimmed;
 
     return [
       {

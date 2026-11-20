@@ -1,0 +1,21 @@
+{
+  "status": 1,
+  "result": {
+    "status": "Failed",
+    "success": false,
+    "details": {
+      "componentFailures": [
+        {
+          "componentType": "ApexClass",
+          "fileName": "classes/B2BCreditLimitService.cls",
+          "fullName": "B2BCreditLimitService",
+          "problem": "Expecting '}' but was: ']'",
+          "problemType": "Error",
+          "lineNumber": 159,
+          "columnNumber": 10,
+          "success": false
+        }
+      ]
+    }
+  }
+}

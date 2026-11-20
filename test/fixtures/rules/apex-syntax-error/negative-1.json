@@ -1,0 +1,21 @@
+{
+  "status": 1,
+  "result": {
+    "status": "Failed",
+    "success": false,
+    "details": {
+      "componentFailures": [
+        {
+          "componentType": "ApexClass",
+          "fileName": "classes/B2BOrderService.cls",
+          "fullName": "B2BOrderService",
+          "problem": "Dependent class is invalid and needs recompilation",
+          "problemType": "Error",
+          "lineNumber": 12,
+          "columnNumber": 5,
+          "success": false
+        }
+      ]
+    }
+  }
+}
