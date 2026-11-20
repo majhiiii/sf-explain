@@ -1,0 +1,22 @@
+id: deploy-record-type-picklist-missing
+title: RecordType references non-existent picklist value
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)Record type [a-zA-Z0-9_]+ references picklist value [a-zA-Z0-9_]+ which does not exist'
+    - field: message
+      regex: '(?i)In field:\s*picklist\s*-\s*no PicklistValue named'
+explain: >
+  A RecordType definition (*.recordType-meta.xml) specifies an available or default picklist value
+  under <picklistValues> that has not been defined on the custom or standard field in the target org or package.
+fix:
+  - 'Check the picklist field definition on the sObject and ensure the referenced value is listed under <valueSet>.'
+  - 'If deploying a custom field and a record type together, ensure both are included in the same deployment directory.'
+  - 'Remove obsolete picklist values from the <picklistValues> block in the *.recordType-meta.xml file.'
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_recordtype.htm
+    title: Salesforce Metadata API - RecordType
+tags: [recordtype, picklist, deploy]

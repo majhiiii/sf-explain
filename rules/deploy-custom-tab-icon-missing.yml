@@ -1,0 +1,22 @@
+id: deploy-custom-tab-icon-missing
+title: Custom tab missing required motif or custom object definition
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)Cannot find (icon|motif|custom tab definition):\s*[a-zA-Z0-9_]+'
+    - field: message
+      regex: '(?i)In field:\s*motif\s*-\s*no CustomTab named'
+explain: >
+  A deployed Custom Tab (*.tab-meta.xml) failed deployment because the target Custom Object
+  does not exist in the org/package, or the specified motif/icon style is invalid or unsupported.
+fix:
+  - 'Ensure the custom object corresponding to the tab (*.object-meta.xml) is deployed before or alongside the tab.'
+  - 'Check the <motif> tag in the tab XML and verify it uses a standard Salesforce icon name (such as "Custom50: Big top").'
+  - 'If using a custom image/SVG icon, verify that the document or static resource containing the icon is included in the project.'
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_tab.htm
+    title: Salesforce Metadata API - CustomTab
+tags: [tabs, deploy, ui]

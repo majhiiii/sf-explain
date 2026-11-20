@@ -1,0 +1,20 @@
+{
+  "status": 1,
+  "result": {
+    "summary": {
+      "outcome": "Failed",
+      "testsRan": 1
+    },
+    "tests": [
+      {
+        "Outcome": "Fail",
+        "ApexClass": {
+          "Name": "PaymentServiceTest"
+        },
+        "MethodName": "testProcessCharge",
+        "Message": "System.CalloutException: You have uncommitted work pending. Please commit or rollback before calling out",
+        "StackTrace": "Class.PaymentService.chargeCustomer: line 55, column 1"
+      }
+    ]
+  }
+}

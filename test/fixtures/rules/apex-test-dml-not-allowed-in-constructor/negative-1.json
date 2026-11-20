@@ -1,0 +1,20 @@
+{
+  "status": 1,
+  "result": {
+    "summary": {
+      "outcome": "Failed",
+      "testsRan": 1
+    },
+    "tests": [
+      {
+        "Outcome": "Fail",
+        "ApexClass": {
+          "Name": "OrderControllerTest"
+        },
+        "MethodName": "testControllerInit",
+        "Message": "System.NullPointerException: Attempt to de-reference a null object",
+        "StackTrace": "Class.OrderControllerTest.testControllerInit: line 5, column 1"
+      }
+    ]
+  }
+}

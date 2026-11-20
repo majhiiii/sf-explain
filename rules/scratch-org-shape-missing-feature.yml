@@ -1,0 +1,25 @@
+id: scratch-org-shape-missing-feature
+title: Org Shape source org missing required feature or not found
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)Shape source org missing feature:\s*[a-zA-Z0-9_]+'
+    - field: name
+      equals: OrgShapeNotFound
+    - field: message
+      contains: 'OrgShapeNotFound'
+explain: >
+  When creating a scratch org from an Org Shape (using "sourceOrg" in project-scratch-def.json),
+  the specified source org shape could not be found, has expired, or the Dev Hub does not have
+  Org Shape Representation permissions enabled.
+fix:
+  - 'Verify that the 15-character sourceOrg ID in project-scratch-def.json matches your production or reference org.'
+  - 'In the source org, verify that an org shape was created using "sf org create shape --target-org <alias>".'
+  - 'In your Dev Hub setup, ensure that "Org Shape for Scratch Orgs" is enabled under Scratch Org Info.'
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_shape_intro.htm
+    title: Org Shape for Scratch Orgs
+tags: [scratch-org, shape]

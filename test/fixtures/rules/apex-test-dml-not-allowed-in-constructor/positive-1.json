@@ -1,0 +1,20 @@
+{
+  "status": 1,
+  "result": {
+    "summary": {
+      "outcome": "Failed",
+      "testsRan": 1
+    },
+    "tests": [
+      {
+        "Outcome": "Fail",
+        "ApexClass": {
+          "Name": "OrderControllerTest"
+        },
+        "MethodName": "testControllerInit",
+        "Message": "System.TypeException: DML not allowed in constructor",
+        "StackTrace": "Class.OrderController.<init>: line 12, column 1"
+      }
+    ]
+  }
+}

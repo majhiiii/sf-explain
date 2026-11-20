@@ -1,0 +1,20 @@
+{
+  "status": 1,
+  "result": {
+    "summary": {
+      "outcome": "Failed",
+      "testsRan": 1
+    },
+    "tests": [
+      {
+        "Outcome": "Fail",
+        "ApexClass": {
+          "Name": "PaymentServiceTest"
+        },
+        "MethodName": "testProcessCharge",
+        "Message": "System.AssertException: Assertion Failed: Expected status 200",
+        "StackTrace": "Class.PaymentServiceTest.testProcessCharge: line 25, column 1"
+      }
+    ]
+  }
+}

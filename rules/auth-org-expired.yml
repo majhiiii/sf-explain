@@ -1,0 +1,24 @@
+id: auth-org-expired
+title: Target scratch org or trial org has expired
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)The (scratch )?org is expired and can no longer be accessed'
+    - field: message
+      contains: 'Org has expired'
+    - field: name
+      equals: OrgExpiredError
+explain: >
+  The target scratch org, sandbox, or trial org reached the end of its active lifespan and has
+  been deactivated or deleted by Salesforce. Expired orgs can no longer run commands or accept deployments.
+fix:
+  - 'Run "sf org list --clean" to clean up references to expired scratch orgs from your local CLI configuration.'
+  - 'Create a new scratch org using "sf org create scratch -f config/project-scratch-def.json -d -a <alias>".'
+  - 'Deploy your project source into the newly created scratch org.'
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_expiration.htm
+    title: Scratch Org Expiration and Lifecycle
+tags: [auth, scratch-org]

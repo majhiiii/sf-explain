@@ -1,0 +1,17 @@
+{
+  "status": 1,
+  "result": {
+    "details": {
+      "componentFailures": [
+        {
+          "componentType": "CustomField",
+          "fileName": "force-app/main/default/objects/Invoice_Line__c/fields/Invoice__c.field-meta.xml",
+          "fullName": "Invoice_Line__c.Invoice__c",
+          "problem": "FIELD_INTEGRITY_EXCEPTION: Cannot create a master-detail relationship that would have null values",
+          "problemType": "Error",
+          "success": false
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "status": 1,
+  "result": {
+    "details": {
+      "componentFailures": [
+        {
+          "componentType": "CustomField",
+          "fileName": "force-app/main/default/objects/Account/fields/Type.field-meta.xml",
+          "fullName": "Account.Type",
+          "problem": "Cannot add picklist value to standard picklist directly; use StandardValueSet",
+          "problemType": "Error",
+          "success": false
+        }
+      ]
+    }
+  }
+}

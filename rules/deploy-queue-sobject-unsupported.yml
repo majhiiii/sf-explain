@@ -1,0 +1,23 @@
+id: deploy-queue-sobject-unsupported
+title: Queue definition references unsupported sObject type
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)Queue [a-zA-Z0-9_]+ cannot support sObject [a-zA-Z0-9_]+'
+    - field: message
+      regex: '(?i)In field:\s*sobjectType\s*-\s*no Sobject named'
+explain: >
+  A Queue metadata definition (*.queue-meta.xml) specifies an sObject under <queueSobject> that
+  does not support queues (for example, standard objects like Account or Contact), or a custom object
+  that has not been enabled for queues in the target org.
+fix:
+  - 'Check the <queueSobject> declarations inside your *.queue-meta.xml file.'
+  - 'Verify that the target custom object has "enableLicensing" or is enabled for ownership queues.'
+  - 'Remember that standard objects like Account, Contact, and Opportunity do not support queue ownership in standard Salesforce.'
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_queue.htm
+    title: Salesforce Metadata API - Queue
+tags: [queue, deploy]

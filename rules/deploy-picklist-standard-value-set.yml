@@ -1,0 +1,23 @@
+id: deploy-picklist-standard-value-set
+title: Standard picklist value must be deployed via StandardValueSet
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)Cannot add picklist value to standard picklist'
+    - field: message
+      regex: '(?i)StandardValueSet.*?(not found|cannot be modified)'
+explain: >
+  Picklist values for standard Salesforce fields (such as Account.Type, Lead.LeadSource, Opportunity.StageName)
+  cannot be deployed inside standard field metadata XML files. They must be packaged and deployed
+  as StandardValueSet metadata files (e.g. AccountType.standardValueSet-meta.xml).
+fix:
+  - 'Retrieve the StandardValueSet for the field (for example: sf project retrieve start -m StandardValueSet:AccountType).'
+  - 'Add the new picklist value inside the retrieved standardValueSet-meta.xml file.'
+  - 'Deploy the StandardValueSet metadata file instead of attempting to deploy custom picklist entries on the standard field.'
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_standardvalueset.htm
+    title: Salesforce Metadata API - StandardValueSet
+tags: [deploy, picklist, metadata]

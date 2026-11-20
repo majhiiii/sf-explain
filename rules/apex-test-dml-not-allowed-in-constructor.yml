@@ -1,0 +1,23 @@
+id: apex-test-dml-not-allowed-in-constructor
+title: DML operations not permitted in class constructor or field initializer
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      contains: 'DML not allowed in constructor'
+    - field: message
+      regex: '(?i)DML not allowed in (constructor|field initializer)'
+explain: >
+  Apex strictly forbids performing database DML operations (such as insert, update, delete, upsert)
+  inside a class constructor or static/instance field initializer block, particularly in Visualforce controllers
+  or Lightning controller initialization where object state is instantiated before security evaluation.
+fix:
+  - 'Remove the DML operation (insert, update, delete) from the class constructor method.'
+  - 'Move the database transaction into a separate action method (e.g. init(), save(), or handleLoad()) invoked explicitly after instantiation.'
+  - 'For unit tests, instantiate the object first, then call the state-modifying method.'
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_constructors.htm
+    title: Apex Developer Guide - Defining Constructors
+tags: [apex, dml, constructor]

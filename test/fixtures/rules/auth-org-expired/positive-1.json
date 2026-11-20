@@ -1,0 +1,6 @@
+{
+  "name": "OrgExpiredError",
+  "message": "The scratch org is expired and can no longer be accessed. Run 'sf org list --clean' to clean up.",
+  "exitCode": 1,
+  "status": 1
+}

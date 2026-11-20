@@ -1,0 +1,17 @@
+{
+  "status": 1,
+  "result": {
+    "details": {
+      "componentFailures": [
+        {
+          "componentType": "Queue",
+          "fileName": "force-app/main/default/queues/Support_Triage.queue-meta.xml",
+          "fullName": "Support_Triage",
+          "problem": "Queue Support_Triage cannot support sObject Account",
+          "problemType": "Error",
+          "success": false
+        }
+      ]
+    }
+  }
+}

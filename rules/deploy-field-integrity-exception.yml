@@ -1,0 +1,23 @@
+id: deploy-field-integrity-exception
+title: Metadata field integrity exception during deployment
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)FIELD_INTEGRITY_EXCEPTION:\s*'
+    - field: message
+      regex: '(?i)Cannot create a master-detail relationship that would have null values'
+explain: >
+  A deployed field definition violated database schema integrity rules. This typically occurs when
+  creating a new Master-Detail relationship on a custom object that already contains existing records
+  without first creating it as an optional Lookup, populating values, and converting it.
+fix:
+  - 'If creating a Master-Detail relationship on an existing object with records, first deploy the field as a Lookup.'
+  - 'Populate the lookup field with valid parent record IDs on all existing records in the target org.'
+  - 'Once all records have parent values, edit the field definition to Master-Detail and redeploy.'
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_customfield.htm
+    title: Salesforce Metadata API - Master-Detail Relationship Considerations
+tags: [deploy, fields, schema]

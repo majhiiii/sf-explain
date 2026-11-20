@@ -1,0 +1,17 @@
+{
+  "status": 1,
+  "result": {
+    "details": {
+      "componentFailures": [
+        {
+          "componentType": "RecordType",
+          "fileName": "force-app/main/default/objects/Case/recordTypes/Billing_Inquiry.recordType-meta.xml",
+          "fullName": "Case.Billing_Inquiry",
+          "problem": "Record type Billing_Inquiry references picklist value Expedited which does not exist",
+          "problemType": "Error",
+          "success": false
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,23 @@
+id: apex-test-uncommitted-work
+title: Callout exception - Uncommitted work pending before HTTP callout
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      contains: 'You have uncommitted work pending. Please commit or rollback before calling out'
+    - field: message
+      regex: '(?i)CalloutException:\s*You have uncommitted work pending'
+explain: >
+  Apex prohibits making an external HTTP/web service callout after performing DML operations
+  (insert, update, delete) within the same transaction, because the open database transaction
+  cannot remain uncommitted across network latency.
+fix:
+  - 'Reorder your logic so that all HTTP callouts execute before performing any DML database operations.'
+  - 'In asynchronous scenarios, execute the HTTP callout within a separate transaction using a Queueable class or @future(callout=true) method.'
+  - 'In unit tests, ensure Test.setMock(HttpCalloutMock.class, ...) is registered before any callout invocation.'
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_dml.htm
+    title: Apex Developer Guide - Invoking Callouts from Apex
+tags: [apex, callout, test]
