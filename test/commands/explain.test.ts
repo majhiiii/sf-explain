@@ -213,6 +213,7 @@ describe('explain command', () => {
 
     expect(output).to.include('Analysis complete: 3 problems found (1 root cause, 2 cascading), 2 explained');
     expect(output).to.include("Expecting '}' but was: ']'");
+    expect(output).to.include('Location:    force-app/main/default/classes/OrderService.cls:10:5');
     expect(output).to.include('⚠️  2 cascading errors hidden (run with --show-cascade to view all)');
     expect(output).to.not.include('Variable does not exist: totalAmount');
 

@@ -12,6 +12,19 @@ export interface HumanRenderOptions {
   showCascade?: boolean;
 }
 
+function formatLocation(f: Failure): string | undefined {
+  if (!f.file) {
+    return undefined;
+  }
+  if (f.line && f.column) {
+    return `${f.file}:${f.line}:${f.column}`;
+  }
+  if (f.line) {
+    return `${f.file}:${f.line}`;
+  }
+  return f.file;
+}
+
 export function renderHuman(
   groupedOrResults: GroupedAnalysis | FailureAnalysis[],
   unmatchedOrOptions?: Failure[] | HumanRenderOptions,
@@ -52,9 +65,14 @@ export function renderHuman(
     const f = group.rootCause.failure;
     const summary = f.message.split('\n')[0].trim();
 
+    const loc = formatLocation(f);
+    lines.push(`${itemNum}) ${summary}`);
+    if (loc) {
+      lines.push(`   Location:    ${loc}`);
+    }
+
     if (group.rootCause.analysis && group.rootCause.analysis.matches.length > 0) {
       const best = group.rootCause.analysis.matches[0];
-      lines.push(`${itemNum}) ${summary}`);
       lines.push(`   Rule:        ${best.ruleId}`);
       lines.push(`   Likely cause: ${best.explain.trim()}`);
       lines.push('   Fix:');
@@ -67,7 +85,6 @@ export function renderHuman(
         lines.push(`   Why matched: ${best.why.join('; ')}`);
       }
     } else {
-      lines.push(`${itemNum}) ${summary}`);
       lines.push('   No matching rule. Want to add one? Run: sf explain --contribute');
     }
 
@@ -75,7 +92,9 @@ export function renderHuman(
       if (opts?.showCascade) {
         lines.push(`\n   Cascading errors (${group.cascading.length}):`);
         for (const casc of group.cascading) {
-          lines.push(`     - ${casc.failure.message.split('\n')[0].trim()}`);
+          const cascLoc = formatLocation(casc.failure);
+          const locSuffix = cascLoc ? ` (${cascLoc})` : '';
+          lines.push(`     - ${casc.failure.message.split('\n')[0].trim()}${locSuffix}`);
         }
       } else {
         lines.push(
