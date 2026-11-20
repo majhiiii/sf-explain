@@ -1,0 +1,31 @@
+{
+  "status": 1,
+  "result": {
+    "summary": {
+      "outcome": "Failed",
+      "testsRan": 2,
+      "passing": 1,
+      "failing": 1,
+      "skipped": 0,
+      "passRate": "50%",
+      "failRate": "50%"
+    },
+    "tests": [
+      {
+        "Id": "07M000000000001AAA",
+        "QueueItemId": "709000000000001AAA",
+        "StackTrace": "Class.SampleServiceTest.testExecute: line 42, column 1",
+        "Message": "System.AssertException: Assertion Failed: Expected status active but got pending",
+        "AsyncApexJobId": "707000000000001AAA",
+        "MethodName": "testExecute",
+        "Outcome": "Fail",
+        "ApexClass": {
+          "Id": "01p000000000001AAA",
+          "Name": "SampleServiceTest",
+          "NamespacePrefix": null
+        },
+        "RunTime": 65
+      }
+    ]
+  }
+}

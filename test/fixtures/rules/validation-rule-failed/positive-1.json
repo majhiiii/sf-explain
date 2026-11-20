@@ -1,0 +1,6 @@
+{
+  "status": 1,
+  "name": "DmlError",
+  "message": "Insert failed: FIELD_CUSTOM_VALIDATION_EXCEPTION: Close Date cannot be in the past",
+  "exitCode": 1
+}

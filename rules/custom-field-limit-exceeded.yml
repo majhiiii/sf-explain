@@ -1,0 +1,20 @@
+id: custom-field-limit-exceeded
+title: Maximum custom field limit exceeded on object
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      contains: 'Maximum number of custom fields reached'
+    - field: code
+      equals: MAXIMUM_CUSTOM_FIELDS_EXCEEDED
+explain: >
+  The target object has reached the maximum custom field allocation permitted for your Salesforce edition.
+fix:
+  - Delete or purge unused custom fields from the object (remember to empty the custom field recycle bin).
+  - Consolidate multiple sparsely populated fields into composite fields or custom metadata where appropriate.
+sources:
+  - url: https://help.salesforce.com/s/articleView?id=sf.custom_field_allocations.htm&type=5
+    title: Custom Field Allocations and Limits
+tags: [limits, schema, deploy]

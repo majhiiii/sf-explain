@@ -1,0 +1,12 @@
+{
+  "name": "Error",
+  "message": "Nonexistent flag: --foo\nSee more help with --help",
+  "exitCode": 2,
+  "context": "OrgDisplayCommand",
+  "stack": "Error: Nonexistent flag: --foo\nSee more help with --help\n    at SfCommandError.from (/salesforce/sf-plugins-core/lib/SfCommandError.js:48:16)",
+  "cause": "NonExistentFlagsError: Nonexistent flag: --foo",
+  "warnings": [],
+  "code": "2",
+  "status": 2,
+  "commandName": "OrgDisplayCommand"
+}

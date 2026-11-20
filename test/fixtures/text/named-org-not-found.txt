@@ -1,0 +1,7 @@
+Error (NamedOrgNotFoundError): Parsing --target-org 
+	No authorization information found for NonexistentOrg.
+See more help with --help
+
+Try this:
+
+It looks like you mistyped the username or alias. Did you mean "test-org"?

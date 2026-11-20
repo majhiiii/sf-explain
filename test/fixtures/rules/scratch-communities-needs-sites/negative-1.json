@@ -1,0 +1,6 @@
+{
+  "name": "ScratchOrgError",
+  "message": "Scratch org creation failed: Daily scratch org signup limit reached.",
+  "exitCode": 1,
+  "status": 1
+}

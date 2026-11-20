@@ -1,0 +1,18 @@
+id: scratch-settings-api-version
+title: Setting not available for deploy for specified API version
+status: verified
+severity: error
+confidence: high
+match:
+  all:
+    - field: message
+      contains: 'not available for deploy for this API version'
+explain: >
+  A scratch org setting file specified in your project configuration is not supported for deployment on the target API version.
+fix:
+  - Update the "sourceApiVersion" in sfdx-project.json to match the target Salesforce release.
+  - Remove unsupported settings from config/project-scratch-def.json.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_considerations.htm
+    title: Limitations for Salesforce DX
+tags: [scratch-org, settings, deploy]

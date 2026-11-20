@@ -1,0 +1,6 @@
+{
+  "status": 1,
+  "name": "DeployError",
+  "message": "Setting CaseSettings not available for deploy for this API version",
+  "exitCode": 1
+}

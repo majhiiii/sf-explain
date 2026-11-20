@@ -1,0 +1,6 @@
+{
+  "status": 1,
+  "name": "CompileError",
+  "message": "Dependent class is invalid and needs recompilation: Class.OpportunityService: line 12, column 5",
+  "exitCode": 1
+}

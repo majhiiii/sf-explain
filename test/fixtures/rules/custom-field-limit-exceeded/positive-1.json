@@ -1,0 +1,7 @@
+{
+  "status": 1,
+  "name": "DeployError",
+  "message": "Maximum number of custom fields reached for object Opportunity",
+  "code": "MAXIMUM_CUSTOM_FIELDS_EXCEEDED",
+  "exitCode": 1
+}

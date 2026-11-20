@@ -1,0 +1,22 @@
+id: scratch-org-limit-reached
+title: Daily or active scratch org limit exceeded
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      contains: 'Daily scratch org signup limit reached'
+    - field: message
+      contains: 'Active scratch org limit reached'
+    - field: code
+      equals: SIGNUP_LIMIT_EXCEEDED
+explain: >
+  Scratch org creation was rejected because your Dev Hub org has reached its active scratch org allocation or rolling 24-hour creation limit.
+fix:
+  - View existing scratch orgs with "sf org list --clean" and delete inactive orgs with "sf org delete scratch --target-org <alias>".
+  - If daily limits are exhausted, wait for the 24-hour rolling window to reset.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs_limits.htm
+    title: Scratch Org Allocations and Limits
+tags: [scratch-org, limits]

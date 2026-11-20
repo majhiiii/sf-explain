@@ -1,0 +1,6 @@
+{
+  "name": "ScratchOrgError",
+  "message": "Scratch org creation failed: Communities feature enabled requires Sites to be included in features list.",
+  "exitCode": 1,
+  "status": 1
+}

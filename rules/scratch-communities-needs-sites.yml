@@ -1,0 +1,21 @@
+id: scratch-communities-needs-sites
+title: Scratch org with Communities is not recognized
+status: verified
+severity: error
+confidence: high
+match:
+  all:
+    - field: message
+      contains: 'Communities'
+    - field: message
+      contains: 'Sites'
+explain: >
+  The scratch org definition enables the Communities feature but omits Sites.
+  Salesforce DX documentation notes that scratch orgs with Communities require the Sites feature to be explicitly enabled, otherwise the CLI may fail to recognize the org.
+fix:
+  - Add "Sites" to the features list in your scratch org definition file (e.g., config/project-scratch-def.json).
+  - Delete and recreate the scratch org using "sf org create scratch".
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_considerations.htm
+    title: Limitations for Salesforce DX
+tags: [scratch-org, communities]

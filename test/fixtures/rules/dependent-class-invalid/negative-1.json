@@ -1,0 +1,6 @@
+{
+  "status": 1,
+  "name": "CompileError",
+  "message": "Syntax error: missing semicolon at line 12",
+  "exitCode": 1
+}

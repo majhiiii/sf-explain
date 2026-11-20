@@ -1,0 +1,6 @@
+{
+  "status": 1,
+  "name": "DeployError",
+  "message": "Component Failures: RecordType Account.PersonAccount cannot be found in target org",
+  "exitCode": 1
+}

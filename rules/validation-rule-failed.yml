@@ -1,0 +1,18 @@
+id: validation-rule-failed
+title: DML operation blocked by custom validation rule
+status: verified
+severity: error
+confidence: high
+match:
+  all:
+    - field: message
+      contains: 'FIELD_CUSTOM_VALIDATION_EXCEPTION'
+explain: >
+  A record insert or update triggered a custom validation rule on the object that evaluated to true, blocking the DML transaction.
+fix:
+  - Check the validation rule formula in Setup > Object Manager > [Object] > Validation Rules and adjust test or deployment data.
+  - Temporarily deactivate the validation rule during data migration or sandbox seeding if necessary.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_exceptions_dml.htm
+    title: DML Exceptions and Validation Rules
+tags: [validation, dml, test]

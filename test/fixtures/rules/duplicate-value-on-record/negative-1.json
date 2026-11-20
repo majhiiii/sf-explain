@@ -1,0 +1,6 @@
+{
+  "name": "DeployError",
+  "message": "Component Failures: Class ApexClassTest failed to compile: line 10 column 5",
+  "exitCode": 1,
+  "status": 1
+}

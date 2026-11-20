@@ -1,0 +1,23 @@
+id: production-deploy-code-coverage
+title: Production deployment blocked by insufficient Apex code coverage
+status: verified
+severity: error
+confidence: high
+match:
+  any:
+    - field: message
+      regex: '(?i)Average test coverage across all Apex Classes and Triggers.*at least 75%'
+    - field: message
+      contains: 'Code Coverage Failure'
+    - field: message
+      contains: 'Test coverage is below 75%'
+explain: >
+  Deployment to a production Salesforce org failed because overall Apex code coverage is below the required 75% threshold, or a deployed trigger lacks test coverage.
+fix:
+  - Write additional unit tests for uncovered Apex classes to increase coverage above 75%.
+  - Run local test coverage with "sf apex run test --code-coverage --result-format human" to identify uncovered lines.
+  - Ensure every Apex trigger has at least 1% code coverage.
+sources:
+  - url: https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_deploying_code_coverage.htm
+    title: Deploying Apex - Code Coverage Requirements
+tags: [apex, test, deploy]

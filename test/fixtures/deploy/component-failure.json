@@ -1,0 +1,24 @@
+{
+  "status": 1,
+  "result": {
+    "id": "0Af000000000001AAA",
+    "status": "Failed",
+    "success": false,
+    "details": {
+      "componentFailures": [
+        {
+          "componentType": "CustomField",
+          "fileName": "force-app/main/default/objects/Account/fields/NonexistentField__c.field-meta.xml",
+          "fullName": "Account.NonexistentField__c",
+          "problem": "Entity of type 'CustomField' named 'Account.NonexistentField__c' cannot be found",
+          "problemType": "Error",
+          "lineNumber": 15,
+          "columnNumber": 4,
+          "success": false
+        }
+      ],
+      "componentSuccesses": []
+    },
+    "errorMessage": "Component failures occurred during deployment."
+  }
+}
