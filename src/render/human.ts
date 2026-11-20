@@ -6,24 +6,54 @@
 
 import { FailureAnalysis } from '../engine/types.js';
 import { Failure } from '../types.js';
+import { GroupedAnalysis, groupFailures } from '../engine/grouper.js';
 
-export function renderHuman(results: FailureAnalysis[], unmatched: Failure[]): string {
-  const totalAnalyzed = results.length + unmatched.length;
-  const explainedCount = results.filter((r) => r.matches.length > 0).length;
+export interface HumanRenderOptions {
+  showCascade?: boolean;
+}
+
+export function renderHuman(
+  groupedOrResults: GroupedAnalysis | FailureAnalysis[],
+  unmatchedOrOptions?: Failure[] | HumanRenderOptions,
+  options?: HumanRenderOptions
+): string {
+  let grouped: GroupedAnalysis;
+  let opts: HumanRenderOptions | undefined;
+
+  if (Array.isArray(groupedOrResults)) {
+    grouped = groupFailures(groupedOrResults, (unmatchedOrOptions as Failure[]) ?? []);
+    opts = options;
+  } else {
+    grouped = groupedOrResults;
+    opts = unmatchedOrOptions as HumanRenderOptions | undefined;
+  }
+
+  const totalCascading = grouped.groups.reduce((acc, g) => acc + g.cascading.length, 0);
+  const rootCount = grouped.groups.length;
 
   const lines: string[] = [];
-  lines.push(
-    `Analysis complete: ${totalAnalyzed} problem${totalAnalyzed === 1 ? '' : 's'} found, ${explainedCount} explained\n`
-  );
+  if (totalCascading > 0) {
+    lines.push(
+      `Analysis complete: ${grouped.totalFailures} problems found (${rootCount} root cause${
+        rootCount === 1 ? '' : 's'
+      }, ${totalCascading} cascading), ${grouped.totalExplained} explained\n`
+    );
+  } else {
+    lines.push(
+      `Analysis complete: ${grouped.totalFailures} problem${grouped.totalFailures === 1 ? '' : 's'} found, ${
+        grouped.totalExplained
+      } explained\n`
+    );
+  }
 
-  let itemNum = 1;
-
-  for (const result of results) {
-    const f = result.failure;
+  for (let idx = 0; idx < grouped.groups.length; idx++) {
+    const group = grouped.groups[idx];
+    const itemNum = idx + 1;
+    const f = group.rootCause.failure;
     const summary = f.message.split('\n')[0].trim();
 
-    if (result.matches.length > 0) {
-      const best = result.matches[0];
+    if (group.rootCause.analysis && group.rootCause.analysis.matches.length > 0) {
+      const best = group.rootCause.analysis.matches[0];
       lines.push(`${itemNum}) ${summary}`);
       lines.push(`   Rule:        ${best.ruleId}`);
       lines.push(`   Likely cause: ${best.explain.trim()}`);
@@ -41,15 +71,22 @@ export function renderHuman(results: FailureAnalysis[], unmatched: Failure[]): s
       lines.push('   No matching rule. Want to add one? Run: sf explain --contribute');
     }
 
-    lines.push('');
-    itemNum++;
-  }
+    if (group.cascading.length > 0) {
+      if (opts?.showCascade) {
+        lines.push(`\n   Cascading errors (${group.cascading.length}):`);
+        for (const casc of group.cascading) {
+          lines.push(`     - ${casc.failure.message.split('\n')[0].trim()}`);
+        }
+      } else {
+        lines.push(
+          `\n   ⚠️  ${group.cascading.length} cascading error${
+            group.cascading.length === 1 ? '' : 's'
+          } hidden (run with --show-cascade to view all)`
+        );
+      }
+    }
 
-  for (const uf of unmatched) {
-    const summary = uf.message.split('\n')[0].trim();
-    lines.push(`${itemNum}) ${summary}`);
-    lines.push('   No matching rule. Want to add one? Run: sf explain --contribute\n');
-    itemNum++;
+    lines.push('');
   }
 
   return lines.join('\n').trimEnd();

@@ -13,6 +13,7 @@ import { loadRules } from '../rules/loader.js';
 import { Matcher } from '../engine/matcher.js';
 import { ContextProbes } from '../engine/probes.js';
 import { ExplainOutput, FailureAnalysis } from '../engine/types.js';
+import { groupFailures } from '../engine/grouper.js';
 import { Failure } from '../types.js';
 import { renderHuman } from '../render/human.js';
 import { renderJson } from '../render/json.js';
@@ -43,6 +44,18 @@ export default class Explain extends SfCommand<ExplainOutput> {
       description: messages.getMessage('flags.contribute.description'),
       required: false,
     }),
+    'no-redact': Flags.boolean({
+      summary: messages.getMessage('flags.no-redact.summary'),
+      description: messages.getMessage('flags.no-redact.description'),
+      required: false,
+      default: false,
+    }),
+    'show-cascade': Flags.boolean({
+      summary: messages.getMessage('flags.show-cascade.summary'),
+      description: messages.getMessage('flags.show-cascade.description'),
+      required: false,
+      default: false,
+    }),
   };
 
   public async run(): Promise<ExplainOutput> {
@@ -68,12 +81,14 @@ export default class Explain extends SfCommand<ExplainOutput> {
     }
 
     const rawFailures = normalizeInput(rawInput);
-    const failures = rawFailures.map((f) => redactObject(f));
+    const failures = flags['no-redact'] ? rawFailures : rawFailures.map((f) => redactObject(f));
 
     if (flags.contribute) {
-      const template = renderContribute(failures);
+      // Contribution templates are always fully redacted for public issue sharing
+      const redactedForContribute = rawFailures.map((f) => redactObject(f));
+      const template = renderContribute(redactedForContribute);
       this.log(template);
-      return renderJson([], failures);
+      return renderJson([], redactedForContribute);
     }
 
     const rules = loadRules();
@@ -103,9 +118,10 @@ export default class Explain extends SfCommand<ExplainOutput> {
       }
     }
 
-    const output = renderJson(results, unmatched);
+    const grouped = groupFailures(results, unmatched);
+    const output = renderJson(results, unmatched, grouped.groups);
 
-    this.log(renderHuman(results, unmatched));
+    this.log(renderHuman(grouped, { showCascade: flags['show-cascade'] }));
 
     return output;
   }

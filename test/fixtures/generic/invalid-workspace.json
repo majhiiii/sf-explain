@@ -1,9 +1,9 @@
 {
   "name": "InvalidProjectWorkspaceError",
-  "message": "/home/user/project does not contain a valid Salesforce DX project.",
+  "message": "[REDACTED_PATH]/project does not contain a valid Salesforce DX project.",
   "exitCode": 1,
   "context": "DeployMetadata",
-  "stack": "InvalidProjectWorkspaceError: /home/user/project does not contain a valid Salesforce DX project.\n    at SfCommandError.from (/salesforce/sf-plugins-core/lib/SfCommandError.js:48:16)",
+  "stack": "InvalidProjectWorkspaceError: [REDACTED_PATH]/project does not contain a valid Salesforce DX project.\n    at SfCommandError.from (/salesforce/sf-plugins-core/lib/SfCommandError.js:48:16)",
   "cause": "undefined",
   "warnings": ["Starting in December 2025, this command will require that the target org use source tracking."],
   "code": "InvalidProjectWorkspaceError",

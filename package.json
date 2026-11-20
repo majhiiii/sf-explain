@@ -52,6 +52,7 @@
     "clean-all": "sf-clean all",
     "compile": "wireit",
     "docs": "sf-docs",
+    "fixtures:audit": "wireit",
     "format": "wireit",
     "link-check": "wireit",
     "lint": "wireit",
@@ -133,10 +134,19 @@
     },
     "test": {
       "dependencies": [
+        "fixtures:audit",
         "test:compile",
         "test:only",
         "lint"
       ]
+    },
+    "fixtures:audit": {
+      "command": "node --loader ts-node/esm scripts/audit-fixtures.ts",
+      "files": [
+        "test/fixtures/**",
+        "scripts/audit-fixtures.ts"
+      ],
+      "output": []
     },
     "test:only": {
       "command": "nyc mocha \"test/**/*.test.ts\"",

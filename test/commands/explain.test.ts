@@ -168,4 +168,95 @@ describe('explain command', () => {
     expect(result.results[0].matches[0].ruleId).to.equal('not-a-sfdx-project');
     expect(result.unmatched).to.deep.equal([]);
   });
+
+  it('collapses cascading compiler errors under a root syntax error and expands with --show-cascade', async () => {
+    const multiErrorDeploy = JSON.stringify({
+      status: 1,
+      result: {
+        details: {
+          componentFailures: [
+            {
+              componentType: 'ApexClass',
+              fileName: 'force-app/main/default/classes/OrderService.cls',
+              lineNumber: 10,
+              columnNumber: 5,
+              problem: "Expecting '}' but was: ']'",
+            },
+            {
+              componentType: 'ApexClass',
+              fileName: 'force-app/main/default/classes/OrderService.cls',
+              lineNumber: 12,
+              columnNumber: 15,
+              problem: 'Variable does not exist: totalAmount',
+            },
+            {
+              componentType: 'ApexClass',
+              fileName: 'force-app/main/default/classes/OrderService.cls',
+              lineNumber: 14,
+              columnNumber: 20,
+              problem: "Unexpected token '='.",
+            },
+          ],
+        },
+      },
+    });
+
+    $$.SANDBOX.stub(Explain.prototype, 'readStdin').resolves(multiErrorDeploy);
+
+    // Run without --show-cascade
+    await Explain.run([]);
+
+    let output = sfCommandStubs.log
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+
+    expect(output).to.include('Analysis complete: 3 problems found (1 root cause, 2 cascading), 2 explained');
+    expect(output).to.include("Expecting '}' but was: ']'");
+    expect(output).to.include('⚠️  2 cascading errors hidden (run with --show-cascade to view all)');
+    expect(output).to.not.include('Variable does not exist: totalAmount');
+
+    // Reset stubs and run with --show-cascade
+    sfCommandStubs.log.resetHistory();
+    await Explain.run(['--show-cascade']);
+
+    output = sfCommandStubs.log
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+
+    expect(output).to.include('Cascading errors (2):');
+    expect(output).to.include('Variable does not exist: totalAmount');
+    expect(output).to.include("Unexpected token '='.");
+  });
+
+  it('supports --no-redact to preserve raw identifiers when explicitly requested', async () => {
+    const failureWithCustom = JSON.stringify({
+      status: 1,
+      result: {
+        details: {
+          componentFailures: [
+            {
+              componentType: 'ApexClass',
+              fileName: 'force-app/main/default/classes/OrderService.cls',
+              lineNumber: 5,
+              columnNumber: 1,
+              problem: 'Field Custom_Tax_Rate__c does not exist on Account',
+            },
+          ],
+        },
+      },
+    });
+
+    $$.SANDBOX.stub(Explain.prototype, 'readStdin').resolves(failureWithCustom);
+
+    // Default: redacted
+    const redactedResult = await Explain.run(['--json']);
+    expect(redactedResult.unmatched[0].message).to.include('[REDACTED_CUSTOM_METADATA]');
+    expect(redactedResult.unmatched[0].message).to.not.include('Custom_Tax_Rate__c');
+
+    // With --no-redact
+    const rawResult = await Explain.run(['--json', '--no-redact']);
+    expect(rawResult.unmatched[0].message).to.include('Custom_Tax_Rate__c');
+  });
 });

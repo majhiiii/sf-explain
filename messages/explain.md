@@ -26,6 +26,22 @@ Generate a pre-filled rule contribution template from the failure.
 
 Format the error output into a redacted Failure and YAML skeleton for community rule authoring without opening any network connections.
 
+# flags.no-redact.summary
+
+Disable automatic redaction of sensitive identifiers.
+
+# flags.no-redact.description
+
+Prevent redacting org IDs, tokens, usernames, paths, and custom metadata for local debugging. Redaction is enabled by default.
+
+# flags.show-cascade.summary
+
+Show all cascading errors instead of collapsing them.
+
+# flags.show-cascade.description
+
+Display secondary and cascading compiler errors that were triggered by a root syntax or configuration failure.
+
 # examples
 
 - sf project deploy start --json | <%= config.bin %> <%= command.id %>

@@ -1,6 +1,6 @@
 {
   "name": "InvalidProjectWorkspaceError",
-  "message": "/home/user/project does not contain a valid Salesforce DX project.",
+  "message": "[REDACTED_PATH]/project does not contain a valid Salesforce DX project.",
   "exitCode": 1,
   "code": "InvalidProjectWorkspaceError",
   "status": 1

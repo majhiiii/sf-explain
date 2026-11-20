@@ -51,4 +51,22 @@ describe('PlainTextAdapter', () => {
     expect(failure.source).to.equal('text');
     expect(failure.message).to.equal('Something unexpected crashed\nAdditional detail here');
   });
+
+  it('parses multiple component compile error lines from CLI terminal output including Windows drive paths', () => {
+    const raw = `=== Deploy Errors (2) ===
+ERROR: d:\\LwrPOC\\lwrPOC\\force-app\\main\\default\\classes\\OrderService.cls: Expecting '}' but was: ']' (159:10)
+ERROR: d:\\LwrPOC\\lwrPOC\\force-app\\main\\default\\classes\\OrderService.cls: Variable does not exist: totalAmount (164:33)`;
+
+    const failures = adapter.adapt(raw);
+    expect(failures).to.have.lengthOf(2);
+    expect(failures[0].file).to.equal('d:\\LwrPOC\\lwrPOC\\force-app\\main\\default\\classes\\OrderService.cls');
+    expect(failures[0].component?.type).to.equal('ApexClass');
+    expect(failures[0].component?.name).to.equal('OrderService');
+    expect(failures[0].line).to.equal(159);
+    expect(failures[0].column).to.equal(10);
+    expect(failures[0].message).to.equal("Expecting '}' but was: ']'");
+
+    expect(failures[1].line).to.equal(164);
+    expect(failures[1].message).to.equal('Variable does not exist: totalAmount');
+  });
 });

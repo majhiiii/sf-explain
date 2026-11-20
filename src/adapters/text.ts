@@ -6,6 +6,48 @@
 
 import { Failure } from '../types.js';
 
+const COMPONENT_ERROR_REGEX = /^ERROR:\s+([a-zA-Z]:[\\/][^:]+|[^:]+):\s*(.*?)(?:\s+\((\d+):(\d+)\))?$/;
+
+function extractComponentMetadata(filePath: string): { type?: string; name?: string } | undefined {
+  const baseName = filePath.split(/[\\/]/).pop() ?? '';
+  if (baseName.endsWith('.cls')) {
+    return { type: 'ApexClass', name: baseName.replace(/\.cls$/, '') };
+  }
+  if (baseName.endsWith('.trigger')) {
+    return { type: 'ApexTrigger', name: baseName.replace(/\.trigger$/, '') };
+  }
+  if (filePath.includes('/lwc/') || filePath.includes('\\lwc\\')) {
+    return { type: 'LightningComponentBundle' };
+  }
+  return undefined;
+}
+
+function parseComponentErrors(lines: string[]): Failure[] {
+  const failures: Failure[] = [];
+
+  for (const line of lines) {
+    const lineMatch = COMPONENT_ERROR_REGEX.exec(line.trim());
+    if (lineMatch) {
+      const filePath = lineMatch[1].trim();
+      const msg = lineMatch[2].trim();
+      const lineNum = lineMatch[3] ? Number.parseInt(lineMatch[3], 10) : undefined;
+      const colNum = lineMatch[4] ? Number.parseInt(lineMatch[4], 10) : undefined;
+
+      failures.push({
+        source: 'deploy',
+        message: msg,
+        file: filePath,
+        line: lineNum,
+        column: colNum,
+        component: extractComponentMetadata(filePath),
+        raw: line,
+      });
+    }
+  }
+
+  return failures;
+}
+
 export class PlainTextAdapter {
   // eslint-disable-next-line class-methods-use-this
   public adapt(rawInput: string): Failure[] {
@@ -19,6 +61,13 @@ export class PlainTextAdapter {
       .filter((l) => !/^[─━═\-_=~]{3,}/.test(l.trim()))
       .join('\n')
       .trim();
+
+    const lines = cleaned.split('\n');
+    const componentFailures = parseComponentErrors(lines);
+
+    if (componentFailures.length > 0) {
+      return componentFailures;
+    }
 
     // Match patterns like "Error (NamedOrgNotFoundError): ..." or "Error (2): ..."
     const errorWithParensRegex = /Error\s*\(([^)]+)\):\s*([\s\S]+)/m;

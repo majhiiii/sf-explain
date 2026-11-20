@@ -68,4 +68,51 @@ describe('Redaction Module', () => {
     expect(cleaned.details.errors[0]).to.include('[REDACTED_HOME]');
     expect(cleaned.details.errors[0]).to.include('[REDACTED_ORG_ID]');
   });
+
+  it('redacts Windows and Unix absolute project paths while preserving relative structure', () => {
+    const winPath =
+      'ERROR: d:\\LwrPOC\\lwrPOC\\force-app\\main\\default\\classes\\B2BCreditLimitService.cls: Expecting } (159:10)';
+    const unixPath =
+      'ERROR: /var/workspace/secret-repo/force-app/main/default/classes/B2BCreditLimitService.cls: (159:10)';
+
+    expect(redact(winPath)).to.include('[REDACTED_PATH]\\force-app\\main\\default\\classes\\B2BCreditLimitService.cls');
+    expect(redact(winPath)).to.not.include('d:\\LwrPOC\\lwrPOC');
+
+    expect(redact(unixPath)).to.include('[REDACTED_PATH]/force-app/main/default/classes/B2BCreditLimitService.cls');
+    expect(redact(unixPath)).to.not.include('/var/workspace/secret-repo');
+  });
+
+  it('redacts IPv4 addresses without corrupting CLI version numbers', () => {
+    const errorWithIp = 'Failed to connect to proxy at 192.168.1.105:8080 during deployment.';
+    const versionString = 'Salesforce CLI version 2.142.7 on Node v22.23.0 and API 60.0';
+
+    expect(redact(errorWithIp)).to.equal('Failed to connect to proxy at [REDACTED_IP]:8080 during deployment.');
+    expect(redact(versionString)).to.equal('Salesforce CLI version 2.142.7 on Node v22.23.0 and API 60.0');
+  });
+
+  it('redacts Named Credentials, JWT tokens, and private key blocks', () => {
+    const callout = 'Unauthorized callout to callout:Stripe_Secret_Gateway/v1/charges';
+    const jwt =
+      'Failed with token: eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJteS1jbGllbnQifQ.dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk';
+    const privateKey = '-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA0Y3...\n-----END RSA PRIVATE KEY-----';
+
+    expect(redact(callout)).to.equal('Unauthorized callout to callout:[REDACTED_CREDENTIAL]/v1/charges');
+    expect(redact(jwt)).to.equal('Failed with token: [REDACTED_JWT_TOKEN]');
+    expect(redact(privateKey)).to.equal('[REDACTED_PRIVATE_KEY]');
+  });
+
+  it('redacts custom Salesforce metadata while preserving standard objects and fields', () => {
+    const customError =
+      'Entity of type CustomObject named Invoice__c or field Total_Discount__c or Setting__mdt not found.';
+    const standardError = 'Field Name on Account and StageName on Opportunity cannot be null.';
+
+    const redactedCustom = redact(customError);
+    expect(redactedCustom).to.not.include('Invoice__c');
+    expect(redactedCustom).to.not.include('Total_Discount__c');
+    expect(redactedCustom).to.not.include('Setting__mdt');
+    expect(redactedCustom).to.include('[REDACTED_CUSTOM_METADATA]');
+
+    const redactedStandard = redact(standardError);
+    expect(redactedStandard).to.equal(standardError);
+  });
 });

@@ -6,6 +6,7 @@
 
 import { Failure } from '../types.js';
 import { Rule, SourceLink } from '../rules/schema.js';
+import { FailureGroup } from './grouper.js';
 
 export interface Match {
   ruleId: string;
@@ -35,4 +36,5 @@ export interface ExplainOutput {
   explained: number;
   results: FailureAnalysis[];
   unmatched: Failure[];
+  groups?: FailureGroup[];
 }

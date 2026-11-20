@@ -6,8 +6,9 @@
 
 import { ExplainOutput, FailureAnalysis } from '../engine/types.js';
 import { Failure } from '../types.js';
+import { FailureGroup } from '../engine/grouper.js';
 
-export function renderJson(results: FailureAnalysis[], unmatched: Failure[]): ExplainOutput {
+export function renderJson(results: FailureAnalysis[], unmatched: Failure[], groups?: FailureGroup[]): ExplainOutput {
   const explained = results.filter((r) => r.matches.length > 0).length;
   const totalAnalyzed = results.length + unmatched.length;
 
@@ -17,5 +18,6 @@ export function renderJson(results: FailureAnalysis[], unmatched: Failure[]): Ex
     explained,
     results,
     unmatched,
+    ...(groups ? { groups } : {}),
   };
 }
